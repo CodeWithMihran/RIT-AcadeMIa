@@ -1,0 +1,16 @@
+<h1>Welcome <%= user.name %></h1>
+
+<h2>Your Subjects (Semester <%= user.semester %>)</h2>
+
+<% if (subjects.length === 0) { %>
+  <p>No subjects available yet.</p>
+<% } %>
+
+<% subjects.forEach(subject => { %>
+  <div>
+    <h3><%= subject.name %></h3>
+    <p>Syllabus: <%= subject.syllabus %></p>
+  </div>
+<% }) %>
+
+<a href="/logout">Logout</a>
