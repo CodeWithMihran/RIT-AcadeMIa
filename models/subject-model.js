@@ -40,4 +40,4 @@ const subjectSchema = new mongoose.Schema({
   ]
 });
 
-module.exports = mongoose.model("Subject", subjectSchema);
+module.exports = mongoose.model("subject", subjectSchema);

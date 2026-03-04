@@ -1,50 +1,66 @@
 const userModel = require("../models/user-model");
 const bcrypt = require("bcrypt");
+const { generateToken } = require("../utils/generateToken");
+
 
 // Register
-exports.registerUser = async (req, res) => {
+module.exports.registerUser = async (req, res) => {
   try {
     const { name, branch, year, semester, email, password, confirmPassword } = req.body;
 
     if (password !== confirmPassword) {
-      return res.send("Passwords do not match");
+      req.flash("error", "Passwords do not match");
+      return res.redirect("/");
     }
 
-    const existingUser = await userModel.findOne({ email });
+    let existingUser = await userModel.findOne({ email });
     if (existingUser) {
-      return res.send("User already exists");
+      req.flash("error", "You already have an account, please login.");
+      return res.redirect("/");
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
 
-    await userModel.create({
+    const user = await userModel.create({
       name,
       branch,
       year,
       semester,
       email,
-      password: hashedPassword
+      password: hash
     });
 
+    const token = generateToken(user);
+    res.cookie("token", token);
     res.redirect("/");
-  } catch (error) {
-    console.log(error);
-    res.send("Error registering user");
+
+  } catch (err) {
+    res.send(err.message);
   }
 };
 
 // Login
-exports.loginUser = async (req, res) => {
+module.exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user) return res.send("User not found");
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      req.flash("error", "User not found");
+      return res.redirect("/");
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.send("Invalid credentials");
 
-    req.session.user = user;
+    if (!isMatch) {
+      req.flash("error", "Invalid credentials");
+      return res.redirect("/");
+    }
+
+    let token = generateToken(user);
+    res.cookie("token", token);
 
     if (user.role === "admin") {
       return res.redirect("/admin");
@@ -52,14 +68,12 @@ exports.loginUser = async (req, res) => {
       return res.redirect("/dashboard");
     }
 
-  } catch (error) {
-    console.log(error);
-    res.send("Login error");
+  } catch (err) {
+    res.send(err.message);
   }
 };
 
-exports.logoutUser = (req, res) => {
-  req.session.destroy(() => {
-    res.redirect("/");
-  });
+module.exports.logoutUser = (req, res) => {
+  res.clearCookie("token");
+  res.redirect("/");
 };
