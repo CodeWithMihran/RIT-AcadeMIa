@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subjects - RIT Academia</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Subjects for <%= user.branch %> - Semester <%= user.semester %></h1>
+        <a href="/users/dashboard">Back to Dashboard</a> |
+        <a href="/auth/logout">Logout</a>
+    </header>
+
+    <!-- Flash Messages -->
+    <% if (error.length > 0) { %>
+        <div class="alert alert-danger">
+            <%= error %>
+        </div>
+    <% } %>
+    <% if (success.length > 0) { %>
+        <div class="alert alert-success">
+            <%= success %>
+        </div>
+    <% } %>
+
+    <main>
+        <% if (subjects.length === 0) { %>
+            <p>No subjects available yet for your branch and semester.</p>
+        <% } else { %>
+            <section class="subject-list">
+                <% subjects.forEach(subject => { %>
+                    <div class="subject-card">
+                        <h2><%= subject.name %></h2>
+                        <p><strong>Syllabus:</strong> <%= subject.syllabus %></p>
+
+                        <% if(subject.notes) { %>
+                            <p><a href="<%= subject.notes %>" target="_blank">Download Notes</a></p>
+                        <% } %>
+
+                        <% if(subject.pyqs) { %>
+                            <p><a href="<%= subject.pyqs %>" target="_blank">Download PYQs</a></p>
+                        <% } %>
+
+                        <% if(subject.youtube) { %>
+                            <p><a href="<%= subject.youtube %>" target="_blank">Watch Lecture</a></p>
+                        <% } %>
+                    </div>
+                <% }) %>
+            </section>
+        <% } %>
+    </main>
+</body>
+</html>

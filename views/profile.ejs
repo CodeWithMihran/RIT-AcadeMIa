@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile - RIT Academia</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Profile: <%= user.name %></h1>
+        <p>Branch: <%= user.branch %> | Year: <%= user.year %> | Semester: <%= user.semester %></p>
+        <a href="/users/dashboard">Back to Dashboard</a> |
+        <a href="/auth/logout">Logout</a>
+    </header>
+
+    <!-- Flash Messages -->
+    <% if (error.length > 0) { %>
+        <div class="alert alert-danger">
+            <%= error %>
+        </div>
+    <% } %>
+    <% if (success.length > 0) { %>
+        <div class="alert alert-success">
+            <%= success %>
+        </div>
+    <% } %>
+
+    <main>
+        <section class="profile-view">
+            <h2>Update Profile</h2>
+            <form action="/users/profile/update" method="POST">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="<%= user.name %>" required>
+
+                <label for="branch">Branch:</label>
+                <input type="text" id="branch" name="branch" value="<%= user.branch %>" required>
+
+                <label for="year">Year:</label>
+                <input type="number" id="year" name="year" value="<%= user.year %>" required>
+
+                <label for="semester">Semester:</label>
+                <input type="number" id="semester" name="semester" value="<%= user.semester %>" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="<%= user.email %>" required>
+
+                <button type="submit">Update Profile</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

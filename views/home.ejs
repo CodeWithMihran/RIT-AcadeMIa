@@ -1,37 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>RIT AcadeMa</title>
+    <meta charset="UTF-8">
+    <title>RIT Academia</title>
+    <link rel="stylesheet" href="/css/style.css"> <!-- your CSS file -->
 </head>
 <body>
+    <header>
+        <h1>Welcome to RIT Academia</h1>
+        <p>Your one-stop platform for syllabus, notes, PYQs, videos, and personal progress tracking.</p>
+    </header>
 
-  <h1>Welcome to RIT AcedeMIa 🎓</h1>
-  <p>Your Academic Hub</p>
+    <!-- Flash Messages -->
+    <% if (error.length > 0) { %>
+        <div class="alert alert-danger">
+            <%= error %>
+        </div>
+    <% } %>
+    <% if (success.length > 0) { %>
+        <div class="alert alert-success">
+            <%= success %>
+        </div>
+    <% } %>
 
-  <hr>
+    <main>
+        <section class="forms">
+            <!-- Registration Form -->
+            <div class="form-container">
+                <h2>Register</h2>
+                <form action="/auth/register" method="POST">
+                    <input type="text" name="name" placeholder="Name" required>
+                    <input type="text" name="branch" placeholder="Branch" required>
+                    <input type="number" name="year" placeholder="Year" required>
+                    <input type="number" name="semester" placeholder="Semester" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+                    <button type="submit">Register</button>
+                </form>
+            </div>
 
-  <!-- Register Form -->
-  <h2>Register</h2>
-  <form action="/register" method="POST">
-    <input name="name" placeholder="Name" required>
-    <input name="branch" placeholder="Branch" required>
-    <input name="year" type="number" placeholder="Year" required>
-    <input name="semester" type="number" placeholder="Semester" required>
-    <input name="email" type="email" placeholder="Email" required>
-    <input name="password" type="password" placeholder="Password" required>
-    <input name="confirmPassword" type="password" placeholder="Confirm Password" required>
-    <button type="submit">Register</button>
-  </form>
+            <!-- Login Form -->
+            <div class="form-container">
+                <h2>Login</h2>
+                <form action="/auth/login" method="POST">
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+        </section>
 
-  <hr>
-
-  <!-- Login Form -->
-  <h2>Login</h2>
-  <form action="/login" method="POST">
-    <input name="email" type="email" placeholder="Email" required>
-    <input name="password" type="password" placeholder="Password" required>
-    <button type="submit">Login</button>
-  </form>
-
+        <!-- Features / Services Section -->
+        <section class="features">
+            <h2>Our Services</h2>
+            <ul>
+                <li>Access syllabus by branch & semester</li>
+                <li>Download notes & PYQs</li>
+                <li>Watch recommended YouTube lectures</li>
+                <li>Track your personal progress</li>
+                <li>Interactive dashboard with subject-wise content</li>
+            </ul>
+        </section>
+    </main>
 </body>
 </html>

@@ -1,16 +1,59 @@
-<h1>Welcome <%= user.name %></h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - RIT Academia</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome, <%= user.name %>!</h1>
+        <p>Branch: <%= user.branch %> | Year: <%= user.year %> | Semester: <%= user.semester %></p>
+        <a href="/auth/logout">Logout</a>
+    </header>
 
-<h2>Your Subjects (Semester <%= user.semester %>)</h2>
+    <!-- Flash Messages -->
+    <% if (error.length > 0) { %>
+        <div class="alert alert-danger">
+            <%= error %>
+        </div>
+    <% } %>
+    <% if (success.length > 0) { %>
+        <div class="alert alert-success">
+            <%= success %>
+        </div>
+    <% } %>
 
-<% if (subjects.length === 0) { %>
-  <p>No subjects available yet.</p>
-<% } %>
+    <main>
+        <section class="subjects">
+            <h2>Your Subjects</h2>
+            <% if (subjects.length === 0) { %>
+                <p>No subjects available for your branch and semester yet.</p>
+            <% } else { %>
+                <ul>
+                    <% subjects.forEach(subject => { %>
+                        <li>
+                            <h3><%= subject.name %></h3>
+                            <p>Syllabus: <%= subject.syllabus %></p>
+                            <% if(subject.notes) { %>
+                                <p><a href="<%= subject.notes %>" target="_blank">Download Notes</a></p>
+                            <% } %>
+                            <% if(subject.pyqs) { %>
+                                <p><a href="<%= subject.pyqs %>" target="_blank">Download PYQs</a></p>
+                            <% } %>
+                            <% if(subject.youtube) { %>
+                                <p><a href="<%= subject.youtube %>" target="_blank">Watch Lecture</a></p>
+                            <% } %>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } %>
+        </section>
 
-<% subjects.forEach(subject => { %>
-  <div>
-    <h3><%= subject.name %></h3>
-    <p>Syllabus: <%= subject.syllabus %></p>
-  </div>
-<% }) %>
-
-<a href="/logout">Logout</a>
+        <section class="progress-tracker">
+            <h2>Your Progress Tracker</h2>
+            <p>Coming soon: track completed subjects, notes, and assignments.</p>
+        </section>
+    </main>
+</body>
+</html>

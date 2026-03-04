@@ -1,99 +1,99 @@
-require('dotenv').config();
-const express = require('express');
+require("dotenv").config();
+const express = require("express");
+const path = require("path");
+const mongoose = require("mongoose");
+const session = require("express-session");
+const flash = require("connect-flash");
+const cookieParser = require("cookie-parser");
+
 const app = express();
-const path = require('path');
-const session = require('express-session');
-const mongoose = require('mongoose');
 
+// ------------------
 // Database Connection
+// ------------------
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log("MongoDB Connection Error:", err));
 
+// ------------------
 // Middlewares
+// ------------------
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use(session({
+    secret: process.env.SESSION_SECRET || "secret123",
     resave: false,
-    saveUninitialized: false,
-    secret: process.env.SESSION_SECRET
+    saveUninitialized: false
 }));
 
+app.use(flash());
+
+// ------------------
 // Static Files
+// ------------------
 app.use(express.static(path.join(__dirname, "public")));
 
+// ------------------
 // View Engine
+// ------------------
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Global User (for EJS access)
+// ------------------
+// Global Variables for EJS
+// ------------------
 app.use((req, res, next) => {
     res.locals.currentUser = req.session.user || null;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
     next();
 });
 
+// ------------------
 // Routes
-const authRoutes = require("./routes/authRoutes");
+// ------------------
+const indexRoutes = require("./routes/index");
+const authRoutes = require("./routes/authRouter");
+const userRoutes = require("./routes/usersRouter");
+const subjectRoutes = require("./routes/subjectsRouter");
+const adminRoutes = require("./routes/adminRouter");
 
-app.get("/", (req, res) => {
-    res.render("home");
+// Home / Welcome page
+app.use("/", indexRoutes);
+
+// Authentication
+app.use("/auth", authRoutes);
+
+// User dashboard / profile
+app.use("/users", userRoutes);
+
+// Subjects (students & admin)
+app.use("/subjects", subjectRoutes);
+
+// Admin dashboard / manage users & subjects
+app.use("/admin", adminRoutes);
+
+// ------------------
+// 404 Page
+// ------------------
+app.use((req, res) => {
+    res.status(404).render("404", { url: req.originalUrl });
 });
 
-app.use("/", authRoutes);
-
-// Temporary Dashboard
-const Subject = require("./models/subject-model");
-
-app.get("/dashboard", async (req, res) => {
-  if (!req.session.user) {
-    return res.redirect("/");
-  }
-
-  const subjects = await Subject.find({
-    branch: req.session.user.branch,
-    semester: req.session.user.semester
-  });
-
-  res.render("dashboard", {
-    user: req.session.user,
-    subjects
-  });
+// ------------------
+// Global Error Handler
+// ------------------
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).render("500", { error: err });
 });
 
-// Temporary Admin
-app.get("/admin", (req, res) => {
-  if (!req.session.user || req.session.user.role !== "admin") {
-    return res.send("Access Denied");
-  }
-  res.render("admin");
-});
-
-// Add-subject form
-app.get("/admin/add-subject", (req, res) => {
-  if (!req.session.user || req.session.user.role !== "admin") {
-    return res.send("Access Denied");
-  }
-  res.render("add-subject");
-});
-
-app.post("/admin/add-subject", async (req, res) => {
-  if (!req.session.user || req.session.user.role !== "admin") {
-    return res.send("Access Denied");
-  }
-
-  const { name, branch, semester, syllabus } = req.body;
-
-  await Subject.create({
-    name,
-    branch,
-    semester,
-    syllabus
-  });
-
-  res.redirect("/admin");
-});
-
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
+// ------------------
+// Start Server
+// ------------------
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });

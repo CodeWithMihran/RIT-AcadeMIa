@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add Subject - Admin - RIT Academia</title>
+    <title>Edit Subject - Admin - RIT Academia</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <header>
-        <h1>Add New Subject</h1>
+        <h1>Edit Subject</h1>
         <a href="/admin">Back to Dashboard</a> |
         <a href="/auth/logout">Logout</a>
     </header>
@@ -21,29 +21,29 @@
     <% } %>
 
     <main>
-        <form action="/admin/add-subject" method="POST">
+        <form action="/admin/edit-subject/<%= subject._id %>" method="POST">
             <label for="name">Subject Name:</label>
-            <input type="text" name="name" id="name" required>
+            <input type="text" name="name" id="name" value="<%= subject.name %>" required>
 
             <label for="branch">Branch:</label>
-            <input type="text" name="branch" id="branch" required>
+            <input type="text" name="branch" id="branch" value="<%= subject.branch %>" required>
 
             <label for="semester">Semester:</label>
-            <input type="number" name="semester" id="semester" required>
+            <input type="number" name="semester" id="semester" value="<%= subject.semester %>" required>
 
             <label for="syllabus">Syllabus:</label>
-            <textarea name="syllabus" id="syllabus" required></textarea>
+            <textarea name="syllabus" id="syllabus" required><%= subject.syllabus %></textarea>
 
             <label for="notes">Notes URL:</label>
-            <input type="text" name="notes" id="notes">
+            <input type="text" name="notes" id="notes" value="<%= subject.notes || '' %>">
 
             <label for="pyqs">PYQs URL:</label>
-            <input type="text" name="pyqs" id="pyqs">
+            <input type="text" name="pyqs" id="pyqs" value="<%= subject.pyqs || '' %>">
 
             <label for="youtube">YouTube URL:</label>
-            <input type="text" name="youtube" id="youtube">
+            <input type="text" name="youtube" id="youtube" value="<%= subject.youtube || '' %>">
 
-            <button type="submit">Add Subject</button>
+            <button type="submit">Update Subject</button>
         </form>
     </main>
 </body>

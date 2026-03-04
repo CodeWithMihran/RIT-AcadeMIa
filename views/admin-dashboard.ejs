@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - RIT Academia</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <a href="/auth/logout">Logout</a>
+    </header>
+
+    <!-- Flash Messages -->
+    <% if (error.length > 0) { %>
+        <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+    <% if (success.length > 0) { %>
+        <div class="alert alert-success"><%= success %></div>
+    <% } %>
+
+    <main>
+        <section class="admin-actions">
+            <h2>Manage Subjects</h2>
+            <a href="/admin/add-subject">Add New Subject</a>
+            <ul>
+                <% subjects.forEach(subject => { %>
+                    <li>
+                        <%= subject.name %> - <%= subject.branch %> Semester <%= subject.semester %>
+                        | <a href="/admin/edit-subject/<%= subject._id %>">Edit</a>
+                        | <a href="/admin/delete-subject/<%= subject._id %>">Delete</a>
+                    </li>
+                <% }) %>
+            </ul>
+        </section>
+
+        <section class="admin-users">
+            <h2>Manage Users</h2>
+            <a href="/admin/users">View Users</a>
+        </section>
+    </main>
+</body>
+</html>
