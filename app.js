@@ -67,7 +67,7 @@ app.use("/", indexRoutes);
 app.use("/auth", authRoutes);
 
 // User dashboard / profile
-app.use("/users", userRoutes);
+app.use("/", userRoutes);
 
 // Subjects (students & admin)
 app.use("/subjects", subjectRoutes);
@@ -78,17 +78,17 @@ app.use("/admin", adminRoutes);
 // ------------------
 // 404 Page
 // ------------------
-app.use((req, res) => {
-    res.status(404).render("404", { url: req.originalUrl });
-});
+// app.use((req, res) => {
+//     res.status(404).render("404", { url: req.originalUrl });
+// });
 
 // ------------------
 // Global Error Handler
 // ------------------
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).render("500", { error: err });
-});
+// app.use((err, req, res, next) => {
+//     console.error(err.stack);
+//     res.status(500).render("500", { error: err });
+// });
 
 // ------------------
 // Start Server
