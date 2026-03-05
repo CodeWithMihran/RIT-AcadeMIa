@@ -59,6 +59,7 @@ const authRoutes = require("./routes/authRouter");
 const userRoutes = require("./routes/usersRouter");
 const subjectRoutes = require("./routes/subjectsRouter");
 const adminRoutes = require("./routes/adminRouter");
+const progressRoutes = require("./routes/progressRouter");
 
 // Home / Welcome page
 app.use("/", indexRoutes);
@@ -75,20 +76,23 @@ app.use("/subjects", subjectRoutes);
 // Admin dashboard / manage users & subjects
 app.use("/admin", adminRoutes);
 
+// Progress Tracker / track progress of user
+app.use("/progress", progressRoutes);
+
 // ------------------
 // 404 Page
 // ------------------
-app.use((req, res) => {
-    res.status(404).render("404", { url: req.originalUrl });
-});
+// app.use((req, res) => {
+//     res.status(404).render("404", { url: req.originalUrl });
+// });
 
 // ------------------
 // Global Error Handler
 // ------------------
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).render("500", { error: err });
-});
+// app.use((err, req, res, next) => {
+//     console.error(err.stack);
+//     res.status(500).render("500", { error: err });
+// });
 
 // ------------------
 // Start Server

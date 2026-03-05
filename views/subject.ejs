@@ -1,54 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Subjects - RIT Academia</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="./public/stylesheets/style.css">
 </head>
+
 <body>
+
     <header>
-        <h1>Subjects for <%= user.branch %> - Semester <%= user.semester %></h1>
-        <a href="/users/dashboard">Back to Dashboard</a> |
+        <h1>Subjects for <%= user.branch %> - Semester <%= user.semester %>
+        </h1>
+
+        <a href="/users/dashboard">Dashboard</a> |
         <a href="/auth/logout">Logout</a>
     </header>
 
+
     <!-- Flash Messages -->
-    <% if (error.length > 0) { %>
+
+    <% if (error.length> 0) { %>
         <div class="alert alert-danger">
             <%= error %>
         </div>
-    <% } %>
-    <% if (success.length > 0) { %>
-        <div class="alert alert-success">
-            <%= success %>
-        </div>
-    <% } %>
-
-    <main>
-        <% if (subjects.length === 0) { %>
-            <p>No subjects available yet for your branch and semester.</p>
-        <% } else { %>
-            <section class="subject-list">
-                <% subjects.forEach(subject => { %>
-                    <div class="subject-card">
-                        <h2><%= subject.name %></h2>
-                        <p><strong>Syllabus:</strong> <%= subject.syllabus %></p>
-
-                        <% if(subject.notes) { %>
-                            <p><a href="<%= subject.notes %>" target="_blank">Download Notes</a></p>
-                        <% } %>
-
-                        <% if(subject.pyqs) { %>
-                            <p><a href="<%= subject.pyqs %>" target="_blank">Download PYQs</a></p>
-                        <% } %>
-
-                        <% if(subject.youtube) { %>
-                            <p><a href="<%= subject.youtube %>" target="_blank">Watch Lecture</a></p>
-                        <% } %>
-                    </div>
-                <% }) %>
-            </section>
         <% } %>
-    </main>
+
+            <% if (success.length> 0) { %>
+                <div class="alert alert-success">
+                    <%= success %>
+                </div>
+                <% } %>
+
+
+                    <main>
+
+                        <% if (subjects.length===0) { %>
+
+                            <p>No subjects available yet for your branch and semester.</p>
+
+                            <% } else { %>
+
+                                <section class="subject-list">
+
+                                    <% subjects.forEach(subject=> { %>
+
+                                        <div class="subject-card">
+
+                                            <h2>
+                                                <%= subject.name %>
+                                            </h2>
+
+
+                                            <!-- Progress Button -->
+
+                                            <a href="/progress/<%= subject._id %>" class="progress-btn">
+                                                Open Progress Tracker
+                                            </a>
+
+
+                                            <!-- Units -->
+
+                                            <% subject.units.forEach((unit, unitIndex)=> { %>
+
+                                                <div class="unit-box">
+
+                                                    <h3>Unit <%= unit.unitNumber %>: <%= unit.unitTitle %>
+                                                    </h3>
+
+
+                                                    <!-- Notes -->
+
+                                                    <% if(unit.notes.length> 0) { %>
+
+                                                        <p><strong>Notes:</strong></p>
+
+                                                        <ul>
+                                                            <% unit.notes.forEach(note=> { %>
+
+                                                                <li>
+                                                                    <a href="<%= note.link %>" target="_blank">
+                                                                        <%= note.title %>
+                                                                    </a>
+                                                                </li>
+
+                                                                <% }) %>
+                                                        </ul>
+
+                                                        <% } %>
+
+
+                                                            <!-- Books -->
+
+                                                            <% if(unit.books.length> 0) { %>
+
+                                                                <p><strong>Books:</strong></p>
+
+                                                                <ul>
+                                                                    <% unit.books.forEach(book=> { %>
+
+                                                                        <li>
+                                                                            <a href="<%= book.link %>" target="_blank">
+                                                                                <%= book.title %>
+                                                                            </a>
+                                                                        </li>
+
+                                                                        <% }) %>
+                                                                </ul>
+
+                                                                <% } %>
+
+
+                                                                    <!-- PYQs -->
+
+                                                                    <% if(unit.pyqs.length> 0) { %>
+
+                                                                        <p><strong>PYQs:</strong></p>
+
+                                                                        <ul>
+                                                                            <% unit.pyqs.forEach(pyq=> { %>
+
+                                                                                <li>
+                                                                                    <a href="<%= pyq.link %>"
+                                                                                        target="_blank">
+                                                                                        <%= pyq.title %>
+                                                                                    </a>
+                                                                                </li>
+
+                                                                                <% }) %>
+                                                                        </ul>
+
+                                                                        <% } %>
+
+
+                                                                            <!-- YouTube Lectures -->
+
+                                                                            <% if(unit.youtubeLinks.length> 0) { %>
+
+                                                                                <p><strong>Lectures:</strong></p>
+
+                                                                                <ul>
+                                                                                    <% unit.youtubeLinks.forEach(video=>
+                                                                                        { %>
+
+                                                                                        <li>
+                                                                                            <a href="<%= video.link %>"
+                                                                                                target="_blank">
+                                                                                                <%= video.title %>
+                                                                                            </a>
+                                                                                        </li>
+
+                                                                                        <% }) %>
+                                                                                </ul>
+
+                                                                                <% } %>
+                                                </div>
+                                                <% }) %>
+                                        </div>
+                                        <% }) %>
+                                </section>
+                                <% } %>
+                    </main>
 </body>
+
 </html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Progress Tracker</title>
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+            margin: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            margin-top: 30px;
+        }
+
+        .subject-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background: #ddd;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .progress-bar {
+            height: 25px;
+            background: #4CAF50;
+            text-align: center;
+            color: white;
+            line-height: 25px;
+        }
+
+        .unit-card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .unit-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .topic {
+            margin-bottom: 8px;
+        }
+
+        .topic label {
+            margin-left: 10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <%- include("partials/navbar-admin") %>
+
+<div class="container">
+
+    <div class="subject-title">
+        <h1><%= subject.name %> Progress Tracker</h1>
+    </div>
+
+
+    <!-- SUBJECT PROGRESS BAR -->
+
+    <h3>Overall Progress</h3>
+
+    <div class="progress-bar-container">
+        <div class="progress-bar" style="width:<%= subjectProgress %>%">
+            <%= subjectProgress %>%
+        </div>
+    </div>
+
+
+    <!-- UNITS -->
+
+    <% subject.units.forEach((unit, uIndex) => { %>
+
+        <div class="unit-card">
+
+            <div class="unit-title">
+                Unit <%= unit.unitNumber %> : <%= unit.unitTitle %>
+            </div>
+
+
+            <!-- TOPICS -->
+
+            <% unit.topics.forEach((topic, tIndex) => { %>
+
+                <div class="topic">
+
+                    <form action="/progress/toggle" method="POST">
+
+                        <input type="hidden" name="subjectId" value="<%= subject._id %>">
+                        <input type="hidden" name="unitIndex" value="<%= uIndex %>">
+                        <input type="hidden" name="topicIndex" value="<%= tIndex %>">
+
+                        <input
+                            type="checkbox"
+                            onchange="this.form.submit()"
+                            <%= completedMap[`${uIndex}-${tIndex}`] ? "checked" : "" %>
+                        >
+
+                        <label><%= topic.title %></label>
+
+                    </form>
+
+                </div>
+
+            <% }) %>
+
+        </div>
+
+    <% }) %>
+
+</div>
+
+</body>
+</html>
