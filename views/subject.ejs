@@ -2,165 +2,250 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Subjects - RIT Academia</title>
-    <link rel="stylesheet" href="./public/stylesheets/style.css">
+<meta charset="UTF-8">
+<title>Subjects | RIT Academia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
 
-    <header>
-        <h1>Subjects for <%= user.branch %> - Semester <%= user.semester %>
-        </h1>
+<body class="bg-gray-100 min-h-screen">
 
-        <a href="/users/dashboard">Dashboard</a> |
-        <a href="/auth/logout">Logout</a>
-    </header>
+<!-- USER NAVBAR -->
+<%- include("partials/navbar-user") %>
 
 
-    <!-- Flash Messages -->
+<div class="max-w-7xl mx-auto px-6 py-10">
 
-    <% if (error.length> 0) { %>
-        <div class="alert alert-danger">
-            <%= error %>
-        </div>
-        <% } %>
+<!-- Page Header -->
 
-            <% if (success.length> 0) { %>
-                <div class="alert alert-success">
-                    <%= success %>
-                </div>
-                <% } %>
-
-
-                    <main>
-
-                        <% if (subjects.length===0) { %>
-
-                            <p>No subjects available yet for your branch and semester.</p>
-
-                            <% } else { %>
-
-                                <section class="subject-list">
-
-                                    <% subjects.forEach(subject=> { %>
-
-                                        <div class="subject-card">
-
-                                            <h2>
-                                                <%= subject.name %>
-                                            </h2>
+<div class="mb-10">
+<h1 class="text-3xl font-bold text-gray-800">
+Subjects for <%= user.branch %> — Semester <%= user.semester %>
+</h1>
+<p class="text-gray-500 mt-2">
+Access notes, books, PYQs, lectures and track your progress.
+</p>
+</div>
 
 
-                                            <!-- Progress Button -->
 
-                                            <a href="/progress/<%= subject._id %>" class="progress-btn">
-                                                Open Progress Tracker
-                                            </a>
+<!-- Flash Messages -->
 
+<% if (error.length > 0) { %>
 
-                                            <!-- Units -->
+<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+<%= error %>
+</div>
 
-                                            <% subject.units.forEach((unit, unitIndex)=> { %>
-
-                                                <div class="unit-box">
-
-                                                    <h3>Unit <%= unit.unitNumber %>: <%= unit.unitTitle %>
-                                                    </h3>
+<% } %>
 
 
-                                                    <!-- Notes -->
+<% if (success.length > 0) { %>
 
-                                                    <% if(unit.notes.length> 0) { %>
+<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+<%= success %>
+</div>
 
-                                                        <p><strong>Notes:</strong></p>
-
-                                                        <ul>
-                                                            <% unit.notes.forEach(note=> { %>
-
-                                                                <li>
-                                                                    <a href="<%= note.link %>" target="_blank">
-                                                                        <%= note.title %>
-                                                                    </a>
-                                                                </li>
-
-                                                                <% }) %>
-                                                        </ul>
-
-                                                        <% } %>
+<% } %>
 
 
-                                                            <!-- Books -->
 
-                                                            <% if(unit.books.length> 0) { %>
+<!-- No Subjects -->
 
-                                                                <p><strong>Books:</strong></p>
+<% if (subjects.length === 0) { %>
 
-                                                                <ul>
-                                                                    <% unit.books.forEach(book=> { %>
+<div class="bg-white p-10 rounded-xl shadow text-center">
+<p class="text-gray-600 text-lg">
+No subjects available yet for your branch and semester.
+</p>
+</div>
 
-                                                                        <li>
-                                                                            <a href="<%= book.link %>" target="_blank">
-                                                                                <%= book.title %>
-                                                                            </a>
-                                                                        </li>
-
-                                                                        <% }) %>
-                                                                </ul>
-
-                                                                <% } %>
+<% } else { %>
 
 
-                                                                    <!-- PYQs -->
 
-                                                                    <% if(unit.pyqs.length> 0) { %>
+<!-- SUBJECT GRID -->
 
-                                                                        <p><strong>PYQs:</strong></p>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                                                                        <ul>
-                                                                            <% unit.pyqs.forEach(pyq=> { %>
+<% subjects.forEach(subject => { %>
 
-                                                                                <li>
-                                                                                    <a href="<%= pyq.link %>"
-                                                                                        target="_blank">
-                                                                                        <%= pyq.title %>
-                                                                                    </a>
-                                                                                </li>
+<div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition">
 
-                                                                                <% }) %>
-                                                                        </ul>
+<!-- Subject Title -->
 
-                                                                        <% } %>
+<div class="flex justify-between items-center mb-4">
+
+<h2 class="text-xl font-bold text-gray-800">
+<%= subject.name %>
+</h2>
+
+<a 
+href="/progress/<%= subject._id %>"
+class="bg-indigo-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
+>
+Progress
+</a>
+
+</div>
 
 
-                                                                            <!-- YouTube Lectures -->
 
-                                                                            <% if(unit.youtubeLinks.length> 0) { %>
+<!-- Units -->
 
-                                                                                <p><strong>Lectures:</strong></p>
+<% subject.units.forEach((unit, unitIndex) => { %>
 
-                                                                                <ul>
-                                                                                    <% unit.youtubeLinks.forEach(video=>
-                                                                                        { %>
+<div class="border-t pt-4 mt-4">
 
-                                                                                        <li>
-                                                                                            <a href="<%= video.link %>"
-                                                                                                target="_blank">
-                                                                                                <%= video.title %>
-                                                                                            </a>
-                                                                                        </li>
+<h3 class="text-lg font-semibold text-gray-700 mb-3">
+Unit <%= unit.unitNumber %>: <%= unit.unitTitle %>
+</h3>
 
-                                                                                        <% }) %>
-                                                                                </ul>
 
-                                                                                <% } %>
-                                                </div>
-                                                <% }) %>
-                                        </div>
-                                        <% }) %>
-                                </section>
-                                <% } %>
-                    </main>
+
+<!-- NOTES -->
+
+<% if(unit.notes.length > 0) { %>
+
+<div class="mb-3">
+
+<p class="font-semibold text-gray-700">Notes</p>
+
+<ul class="list-disc list-inside text-sm text-blue-600">
+
+<% unit.notes.forEach(note => { %>
+
+<li>
+<a href="<%= note.link %>" target="_blank" class="hover:underline">
+<%= note.title %>
+</a>
+</li>
+
+<% }) %>
+
+</ul>
+
+</div>
+
+<% } %>
+
+
+
+<!-- BOOKS -->
+
+<% if(unit.books.length > 0) { %>
+
+<div class="mb-3">
+
+<p class="font-semibold text-gray-700">Books</p>
+
+<ul class="list-disc list-inside text-sm text-blue-600">
+
+<% unit.books.forEach(book => { %>
+
+<li>
+<a href="<%= book.link %>" target="_blank" class="hover:underline">
+<%= book.title %>
+</a>
+</li>
+
+<% }) %>
+
+</ul>
+
+</div>
+
+<% } %>
+
+
+
+<!-- PYQs -->
+
+<% if(unit.pyqs.length > 0) { %>
+
+<div class="mb-3">
+
+<p class="font-semibold text-gray-700">PYQs</p>
+
+<ul class="list-disc list-inside text-sm text-blue-600">
+
+<% unit.pyqs.forEach(pyq => { %>
+
+<li>
+<a href="<%= pyq.link %>" target="_blank" class="hover:underline">
+<%= pyq.title %>
+</a>
+</li>
+
+<% }) %>
+
+</ul>
+
+</div>
+
+<% } %>
+
+
+
+<!-- YOUTUBE LECTURES -->
+
+<% if(unit.youtubeLinks.length > 0) { %>
+
+<div class="mt-4">
+
+<p class="font-semibold text-gray-700 mb-2">
+Lectures
+</p>
+
+<div class="space-y-4">
+
+<% unit.youtubeLinks.forEach(video => { %>
+
+<div>
+
+<p class="text-sm font-medium mb-1">
+<%= video.title %>
+</p>
+
+<div class="aspect-video">
+
+<iframe
+class="w-full h-full rounded-lg"
+src="<%= video.link.replace('watch?v=','embed/') %>"
+title="YouTube video"
+allowfullscreen
+></iframe>
+
+</div>
+
+</div>
+
+<% }) %>
+
+</div>
+
+</div>
+
+<% } %>
+
+
+
+</div>
+
+<% }) %>
+
+</div>
+
+<% }) %>
+
+</div>
+
+<% } %>
+
+
+</div>
+
 </body>
-
 </html>

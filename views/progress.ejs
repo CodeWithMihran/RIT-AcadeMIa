@@ -2,134 +2,197 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Progress Tracker</title>
 
-    <link rel="stylesheet" href="/stylesheets/style.css">
+<meta charset="UTF-8">
+<title>Progress Tracker | RIT Academia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            font-family: Arial;
-            background: #f4f6f9;
-            margin: 0;
-        }
-
-        .container {
-            width: 80%;
-            margin: auto;
-            margin-top: 30px;
-        }
-
-        .subject-title {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            background: #ddd;
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 40px;
-        }
-
-        .progress-bar {
-            height: 25px;
-            background: #4CAF50;
-            text-align: center;
-            color: white;
-            line-height: 25px;
-        }
-
-        .unit-card {
-            background: white;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
-        }
-
-        .unit-title {
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
-
-        .topic {
-            margin-bottom: 8px;
-        }
-
-        .topic label {
-            margin-left: 10px;
-        }
-
-    </style>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/stylesheets/style.css">
 
 </head>
 
-<body>
 
-    <%- include("partials/navbar-admin") %>
+<body class="bg-gray-100 min-h-screen">
 
-<div class="container">
+<!-- USER NAVBAR -->
 
-    <div class="subject-title">
-        <h1><%= subject.name %> Progress Tracker</h1>
-    </div>
+<%- include("partials/navbar-user") %>
 
 
-    <!-- SUBJECT PROGRESS BAR -->
 
-    <h3>Overall Progress</h3>
-
-    <div class="progress-bar-container">
-        <div class="progress-bar" style="width:<%= subjectProgress %>%">
-            <%= subjectProgress %>%
-        </div>
-    </div>
+<div class="max-w-6xl mx-auto px-6 py-10">
 
 
-    <!-- UNITS -->
+<!-- SUBJECT TITLE -->
 
-    <% subject.units.forEach((unit, uIndex) => { %>
+<div class="text-center mb-12">
 
-        <div class="unit-card">
+<h1 class="text-3xl font-bold text-gray-800 mb-3">
+<%= subject.name %> Progress Tracker
+</h1>
 
-            <div class="unit-title">
-                Unit <%= unit.unitNumber %> : <%= unit.unitTitle %>
-            </div>
-
-
-            <!-- TOPICS -->
-
-            <% unit.topics.forEach((topic, tIndex) => { %>
-
-                <div class="topic">
-
-                    <form action="/progress/toggle" method="POST">
-
-                        <input type="hidden" name="subjectId" value="<%= subject._id %>">
-                        <input type="hidden" name="unitIndex" value="<%= uIndex %>">
-                        <input type="hidden" name="topicIndex" value="<%= tIndex %>">
-
-                        <input
-                            type="checkbox"
-                            onchange="this.form.submit()"
-                            <%= completedMap[`${uIndex}-${tIndex}`] ? "checked" : "" %>
-                        >
-
-                        <label><%= topic.title %></label>
-
-                    </form>
-
-                </div>
-
-            <% }) %>
-
-        </div>
-
-    <% }) %>
+<p class="text-gray-500">
+Track your learning progress topic by topic.
+</p>
 
 </div>
+
+
+
+<!-- SUBJECT PROGRESS CIRCLE -->
+
+<div class="flex justify-center mb-16">
+
+<div class="relative w-40 h-40">
+
+<svg class="w-full h-full transform -rotate-90">
+
+<circle
+cx="80"
+cy="80"
+r="70"
+stroke="#e5e7eb"
+stroke-width="12"
+fill="none"
+/>
+
+<circle
+cx="80"
+cy="80"
+r="70"
+stroke="#4f46e5"
+stroke-width="12"
+fill="none"
+stroke-dasharray="440"
+stroke-dashoffset="<%= 440 - (440 * subjectProgress / 100) %>"
+stroke-linecap="round"
+/>
+
+</svg>
+
+<div class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-indigo-600">
+<%= subjectProgress %>%
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- UNITS SECTION -->
+
+<div class="space-y-8">
+
+<% subject.units.forEach((unit, uIndex) => { %>
+
+
+<div class="bg-white rounded-2xl shadow-lg p-6">
+
+
+
+<!-- UNIT HEADER -->
+
+<div class="flex justify-between items-center mb-6">
+
+<div>
+
+<h2 class="text-xl font-semibold text-gray-800">
+Unit <%= unit.unitNumber %>
+</h2>
+
+<p class="text-gray-500">
+<%= unit.unitTitle %>
+</p>
+
+</div>
+
+
+
+<!-- UNIT PROGRESS CIRCLE -->
+
+<div class="relative w-20 h-20">
+
+<svg class="w-full h-full transform -rotate-90">
+
+<circle
+cx="40"
+cy="40"
+r="30"
+stroke="#e5e7eb"
+stroke-width="8"
+fill="none"
+/>
+
+<circle
+cx="40"
+cy="40"
+r="30"
+stroke="#22c55e"
+stroke-width="8"
+fill="none"
+stroke-dasharray="188"
+stroke-dashoffset="<%= 188 - (188 * unitProgress[uIndex] / 100) %>"
+stroke-linecap="round"
+/>
+
+</svg>
+
+<div class="absolute inset-0 flex items-center justify-center text-sm font-semibold text-green-600">
+<%= unitProgress[uIndex] %>%
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- TOPICS -->
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+<% unit.topics.forEach((topic, tIndex) => { %>
+
+<div class="bg-gray-50 p-4 rounded-lg flex items-center justify-between">
+
+<form action="/progress/toggle" method="POST" class="flex items-center gap-3 w-full">
+
+<input type="hidden" name="subjectId" value="<%= subject._id %>">
+<input type="hidden" name="unitIndex" value="<%= uIndex %>">
+<input type="hidden" name="topicIndex" value="<%= tIndex %>">
+
+<input
+type="checkbox"
+onchange="this.form.submit()"
+class="w-5 h-5 accent-indigo-600"
+<%= completedMap[`${uIndex}-${tIndex}`] ? "checked" : "" %>
+>
+
+<label class="text-gray-700 cursor-pointer flex-1">
+
+<%= topic.title %>
+
+</label>
+
+</form>
+
+</div>
+
+<% }) %>
+
+</div>
+
+</div>
+
+<% }) %>
+
+</div>
+
+</div>
+
+
 
 </body>
 </html>

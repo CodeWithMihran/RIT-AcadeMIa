@@ -1,50 +1,287 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Edit Subject - Admin - RIT Academia</title>
-    <link rel="stylesheet" href="/css/style.css">
+
+<meta charset="UTF-8">
+<title>Edit Subject | RIT Academia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
 </head>
-<body>
-    <header>
-        <h1>Edit Subject</h1>
-        <a href="/admin">Back to Dashboard</a> |
-        <a href="/auth/logout">Logout</a>
-    </header>
 
-    <!-- Flash Messages -->
-    <% if (error.length > 0) { %>
-        <div class="alert alert-danger"><%= error %></div>
-    <% } %>
-    <% if (success.length > 0) { %>
-        <div class="alert alert-success"><%= success %></div>
-    <% } %>
 
-    <main>
-        <form action="/admin/edit-subject/<%= subject._id %>" method="POST">
-            <label for="name">Subject Name:</label>
-            <input type="text" name="name" id="name" value="<%= subject.name %>" required>
+<body class="bg-gray-100 min-h-screen">
 
-            <label for="branch">Branch:</label>
-            <input type="text" name="branch" id="branch" value="<%= subject.branch %>" required>
+<!-- ADMIN NAVBAR -->
+<%- include("partials/navbar-admin") %>
 
-            <label for="semester">Semester:</label>
-            <input type="number" name="semester" id="semester" value="<%= subject.semester %>" required>
 
-            <label for="syllabus">Syllabus:</label>
-            <textarea name="syllabus" id="syllabus" required><%= subject.syllabus %></textarea>
+<div class="max-w-6xl mx-auto p-8">
 
-            <label for="notes">Notes URL:</label>
-            <input type="text" name="notes" id="notes" value="<%= subject.notes || '' %>">
+<h1 class="text-3xl font-bold text-gray-800 mb-8">
+Edit Subject
+</h1>
 
-            <label for="pyqs">PYQs URL:</label>
-            <input type="text" name="pyqs" id="pyqs" value="<%= subject.pyqs || '' %>">
 
-            <label for="youtube">YouTube URL:</label>
-            <input type="text" name="youtube" id="youtube" value="<%= subject.youtube || '' %>">
+<!-- FLASH MESSAGES -->
 
-            <button type="submit">Update Subject</button>
-        </form>
-    </main>
+<% if (error.length > 0) { %>
+<div class="bg-red-100 text-red-700 px-4 py-3 rounded mb-6">
+<%= error %>
+</div>
+<% } %>
+
+<% if (success.length > 0) { %>
+<div class="bg-green-100 text-green-700 px-4 py-3 rounded mb-6">
+<%= success %>
+</div>
+<% } %>
+
+
+
+<form action="/subjects/edit/<%= subject._id %>" method="POST"
+class="bg-white p-8 rounded-xl shadow-lg space-y-8">
+
+
+<!-- BASIC SUBJECT DETAILS -->
+
+<div class="grid md:grid-cols-3 gap-6">
+
+<div>
+<label class="block font-medium mb-2">Subject Name</label>
+<input
+type="text"
+name="name"
+value="<%= subject.name %>"
+required
+class="w-full border rounded-lg px-4 py-2">
+</div>
+
+
+<div>
+<label class="block font-medium mb-2">Branch</label>
+<input
+type="text"
+name="branch"
+value="<%= subject.branch %>"
+required
+class="w-full border rounded-lg px-4 py-2">
+</div>
+
+
+<div>
+<label class="block font-medium mb-2">Semester</label>
+<input
+type="number"
+name="semester"
+value="<%= subject.semester %>"
+required
+class="w-full border rounded-lg px-4 py-2">
+</div>
+
+</div>
+
+
+<hr>
+
+
+<!-- UNITS -->
+
+<h2 class="text-xl font-semibold">Units</h2>
+
+
+<div class="space-y-8">
+
+
+<% subject.units.forEach((unit, uIndex) => { %>
+
+<div class="border rounded-lg p-6 bg-gray-50">
+
+<h3 class="text-lg font-semibold mb-4">
+Unit <%= unit.unitNumber %>
+</h3>
+
+
+<input type="hidden"
+name="units[<%= uIndex %>][unitNumber]"
+value="<%= unit.unitNumber %>">
+
+
+<!-- UNIT TITLE -->
+
+<div class="mb-4">
+
+<label class="block font-medium mb-2">Unit Title</label>
+
+<input
+name="units[<%= uIndex %>][unitTitle]"
+value="<%= unit.unitTitle %>"
+class="w-full border rounded-lg px-4 py-2">
+
+</div>
+
+
+
+<!-- TOPICS -->
+
+<div class="mb-4">
+
+<label class="block font-medium mb-2">
+Topics
+</label>
+
+<input
+name="units[<%= uIndex %>][topics]"
+value="<%= unit.topics.map(t => t.title).join(', ') %>"
+class="w-full border rounded-lg px-4 py-2">
+
+<p class="text-sm text-gray-500 mt-1">
+Separate topics using commas
+</p>
+
+</div>
+
+
+
+<!-- NOTES -->
+
+<div class="mb-4">
+
+<h4 class="font-semibold mb-2">Notes</h4>
+
+<% unit.notes.forEach((note, nIndex) => { %>
+
+<div class="grid grid-cols-2 gap-3 mb-2">
+
+<input
+name="units[<%= uIndex %>][notes][<%= nIndex %>][title]"
+value="<%= note.title %>"
+class="border rounded-lg px-3 py-2"
+placeholder="Title">
+
+<input
+name="units[<%= uIndex %>][notes][<%= nIndex %>][link]"
+value="<%= note.link %>"
+class="border rounded-lg px-3 py-2"
+placeholder="Link">
+
+</div>
+
+<% }) %>
+
+</div>
+
+
+
+<!-- BOOKS -->
+
+<div class="mb-4">
+
+<h4 class="font-semibold mb-2">Books</h4>
+
+<% unit.books.forEach((book, bIndex) => { %>
+
+<div class="grid grid-cols-2 gap-3 mb-2">
+
+<input
+name="units[<%= uIndex %>][books][<%= bIndex %>][title]"
+value="<%= book.title %>"
+class="border rounded-lg px-3 py-2">
+
+<input
+name="units[<%= uIndex %>][books][<%= bIndex %>][link]"
+value="<%= book.link %>"
+class="border rounded-lg px-3 py-2">
+
+</div>
+
+<% }) %>
+
+</div>
+
+
+
+<!-- PYQS -->
+
+<div class="mb-4">
+
+<h4 class="font-semibold mb-2">PYQs</h4>
+
+<% unit.pyqs.forEach((pyq, pIndex) => { %>
+
+<div class="grid grid-cols-2 gap-3 mb-2">
+
+<input
+name="units[<%= uIndex %>][pyqs][<%= pIndex %>][title]"
+value="<%= pyq.title %>"
+class="border rounded-lg px-3 py-2">
+
+<input
+name="units[<%= uIndex %>][pyqs][<%= pIndex %>][link]"
+value="<%= pyq.link %>"
+class="border rounded-lg px-3 py-2">
+
+</div>
+
+<% }) %>
+
+</div>
+
+
+
+<!-- YOUTUBE -->
+
+<div>
+
+<h4 class="font-semibold mb-2">YouTube Lectures</h4>
+
+<% unit.youtubeLinks.forEach((video, vIndex) => { %>
+
+<div class="grid grid-cols-2 gap-3 mb-2">
+
+<input
+name="units[<%= uIndex %>][youtubeLinks][<%= vIndex %>][title]"
+value="<%= video.title %>"
+class="border rounded-lg px-3 py-2">
+
+<input
+name="units[<%= uIndex %>][youtubeLinks][<%= vIndex %>][link]"
+value="<%= video.link %>"
+class="border rounded-lg px-3 py-2">
+
+</div>
+
+<% }) %>
+
+</div>
+
+
+</div>
+
+<% }) %>
+
+</div>
+
+
+<!-- SUBMIT -->
+
+<div class="pt-6">
+
+<button
+class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+
+Update Subject
+
+</button>
+
+</div>
+
+
+</form>
+
+</div>
+
 </body>
 </html>

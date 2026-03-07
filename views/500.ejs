@@ -1,18 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>500 - Server Error</title>
-    <link rel="stylesheet" href="/css/style.css">
+
+<meta charset="UTF-8">
+<title>500 | Server Error</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
 </head>
-<body>
-    <header>
-        <h1>Something Went Wrong (500)</h1>
-        <a href="/">Back to Home</a>
-    </header>
-    <main>
-        <p>We encountered a server error.</p>
-        <p>Please try again later.</p>
-    </main>
+
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+<div class="text-center max-w-xl p-10 bg-white shadow-xl rounded-xl">
+
+<div class="text-6xl font-bold text-red-500 mb-4">
+500
+</div>
+
+<h1 class="text-3xl font-bold text-gray-800 mb-3">
+Server Error
+</h1>
+
+<p class="text-gray-500 mb-6">
+Something went wrong on our server. Please try again later.
+</p>
+
+
+<div class="bg-gray-100 rounded-lg p-4 mb-6 text-sm text-gray-600 text-left">
+
+<p class="font-semibold mb-2">Error Details:</p>
+
+<pre class="text-xs text-red-500 overflow-x-auto">
+<%= error.message %>
+</pre>
+
+</div>
+
+
+<div class="flex justify-center gap-4">
+
+<a
+href="/"
+class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+>
+Go Home
+</a>
+
+<a
+href="/users/dashboard"
+class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+>
+Dashboard
+</a>
+
+</div>
+
+</div>
+
 </body>
 </html>

@@ -1,13 +1,102 @@
-<nav class="navbar">
-    <div class="logo">
-        <a href="/users/dashboard">RIT Academia</a>
+<nav class="bg-indigo-600 text-white shadow-lg">
+
+    <div class="max-w-7xl mx-auto px-6">
+
+        <div class="flex justify-between items-center h-16">
+
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl">🎓</span>
+                <a href="/users/dashboard"
+                   class="text-xl font-bold tracking-wide hover:text-indigo-200 transition">
+                    RIT Academia
+                </a>
+            </div>
+
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+
+                <a href="/users/dashboard"
+                   class="hover:text-indigo-200 transition">
+                    Dashboard
+                </a>
+
+                <a href="/subjects"
+                   class="hover:text-indigo-200 transition">
+                    Subjects
+                </a>
+
+                <a href="/progress"
+                   class="hover:text-indigo-200 transition">
+                    My Progress
+                </a>
+
+                <a href="/users/profile"
+                   class="hover:text-indigo-200 transition">
+                    Profile
+                </a>
+
+                <a href="/auth/logout"
+                   class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">
+                    Logout
+                </a>
+
+            </div>
+
+
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn-user"
+                class="md:hidden text-2xl focus:outline-none">
+                ☰
+            </button>
+
+        </div>
+
     </div>
 
-    <ul class="nav-links">
-        <li><a href="/users/dashboard">Dashboard</a></li>
-        <li><a href="/subjects">Subjects</a></li>
-        <li><a href="/progress">My Progress</a></li>
-        <li><a href="/users/profile">Profile</a></li>
-        <li><a href="/auth/logout">Logout</a></li>
-    </ul>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu-user"
+         class="hidden md:hidden bg-indigo-700 px-6 py-4 space-y-3">
+
+        <a href="/users/dashboard"
+           class="block hover:text-indigo-200">
+            Dashboard
+        </a>
+
+        <a href="/subjects"
+           class="block hover:text-indigo-200">
+            Subjects
+        </a>
+
+        <a href="/progress"
+           class="block hover:text-indigo-200">
+            My Progress
+        </a>
+
+        <a href="/users/profile"
+           class="block hover:text-indigo-200">
+            Profile
+        </a>
+
+        <a href="/auth/logout"
+           class="block text-red-300">
+            Logout
+        </a>
+
+    </div>
+
 </nav>
+
+
+<script>
+
+const btnUser = document.getElementById("menu-btn-user");
+const menuUser = document.getElementById("mobile-menu-user");
+
+btnUser.addEventListener("click", () => {
+    menuUser.classList.toggle("hidden");
+});
+
+</script>

@@ -1,50 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Add Subject - Admin - RIT Academia</title>
-    <link rel="stylesheet" href="/css/style.css">
+
+<meta charset="UTF-8">
+<title>Add Subject | RIT Academia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
 </head>
-<body>
-    <header>
-        <h1>Add New Subject</h1>
-        <a href="/admin">Back to Dashboard</a> |
-        <a href="/auth/logout">Logout</a>
-    </header>
 
-    <!-- Flash Messages -->
-    <% if (error.length > 0) { %>
-        <div class="alert alert-danger"><%= error %></div>
-    <% } %>
-    <% if (success.length > 0) { %>
-        <div class="alert alert-success"><%= success %></div>
-    <% } %>
 
-    <main>
-        <form action="/admin/add-subject" method="POST">
-            <label for="name">Subject Name:</label>
-            <input type="text" name="name" id="name" required>
+<body class="bg-gray-100 min-h-screen">
 
-            <label for="branch">Branch:</label>
-            <input type="text" name="branch" id="branch" required>
+<!-- ADMIN NAVBAR -->
+<%- include("partials/navbar-admin") %>
 
-            <label for="semester">Semester:</label>
-            <input type="number" name="semester" id="semester" required>
 
-            <label for="syllabus">Syllabus:</label>
-            <textarea name="syllabus" id="syllabus" required></textarea>
+<div class="max-w-5xl mx-auto p-8">
 
-            <label for="notes">Notes URL:</label>
-            <input type="text" name="notes" id="notes">
+<h1 class="text-3xl font-bold mb-8 text-gray-800">
+Add New Subject
+</h1>
 
-            <label for="pyqs">PYQs URL:</label>
-            <input type="text" name="pyqs" id="pyqs">
 
-            <label for="youtube">YouTube URL:</label>
-            <input type="text" name="youtube" id="youtube">
+<!-- FLASH MESSAGES -->
 
-            <button type="submit">Add Subject</button>
-        </form>
-    </main>
+<% if (error.length > 0) { %>
+<div class="bg-red-100 text-red-700 px-4 py-3 rounded mb-5">
+<%= error %>
+</div>
+<% } %>
+
+<% if (success.length > 0) { %>
+<div class="bg-green-100 text-green-700 px-4 py-3 rounded mb-5">
+<%= success %>
+</div>
+<% } %>
+
+
+<form action="/subjects/add" method="POST" class="bg-white shadow-lg rounded-xl p-8 space-y-6">
+
+
+<!-- SUBJECT DETAILS -->
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+<div>
+<label class="block font-medium mb-2">Subject Name</label>
+<input name="name" required
+class="w-full border rounded-lg px-4 py-2">
+</div>
+
+<div>
+<label class="block font-medium mb-2">Branch</label>
+<input name="branch" required
+class="w-full border rounded-lg px-4 py-2">
+</div>
+
+<div>
+<label class="block font-medium mb-2">Semester</label>
+<input type="number" name="semester" required
+class="w-full border rounded-lg px-4 py-2">
+</div>
+
+</div>
+
+
+
+<!-- UNITS SECTION -->
+
+<h2 class="text-xl font-semibold mt-6">
+Units
+</h2>
+
+<div id="unitsContainer" class="space-y-6">
+
+</div>
+
+
+<button type="button"
+onclick="addUnit()"
+class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
+
++ Add Unit
+
+</button>
+
+
+
+<div class="pt-6">
+
+<button
+class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+
+Create Subject
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+
+<script>
+
+let unitIndex = 0;
+
+function addUnit(){
+
+const container = document.getElementById("unitsContainer");
+
+const unitHTML = `
+
+<div class="border rounded-lg p-6 bg-gray-50 space-y-4">
+
+<h3 class="text-lg font-semibold">Unit ${unitIndex + 1}</h3>
+
+<input type="hidden" name="units[${unitIndex}][unitNumber]" value="${unitIndex + 1}">
+
+<div>
+<label class="block font-medium mb-1">Unit Title</label>
+<input name="units[${unitIndex}][unitTitle]" required
+class="w-full border rounded-lg px-4 py-2">
+</div>
+
+
+<!-- TOPICS -->
+
+<div>
+
+<label class="font-medium">Topics (comma separated)</label>
+
+<input
+name="units[${unitIndex}][topics]"
+placeholder="Topic1, Topic2, Topic3"
+class="w-full border rounded-lg px-4 py-2">
+
+</div>
+
+
+<!-- NOTES -->
+
+<div>
+
+<label class="font-medium">Notes Link</label>
+
+<input
+name="units[${unitIndex}][notes][0][title]"
+placeholder="Notes Title"
+class="w-full border rounded-lg px-4 py-2 mb-2">
+
+<input
+name="units[${unitIndex}][notes][0][link]"
+placeholder="Notes URL"
+class="w-full border rounded-lg px-4 py-2">
+
+</div>
+
+
+
+<!-- BOOKS -->
+
+<div>
+
+<label class="font-medium">Book Link</label>
+
+<input
+name="units[${unitIndex}][books][0][title]"
+placeholder="Book Title"
+class="w-full border rounded-lg px-4 py-2 mb-2">
+
+<input
+name="units[${unitIndex}][books][0][link]"
+placeholder="Book URL"
+class="w-full border rounded-lg px-4 py-2">
+
+</div>
+
+
+
+<!-- PYQS -->
+
+<div>
+
+<label class="font-medium">PYQ Link</label>
+
+<input
+name="units[${unitIndex}][pyqs][0][title]"
+placeholder="PYQ Title"
+class="w-full border rounded-lg px-4 py-2 mb-2">
+
+<input
+name="units[${unitIndex}][pyqs][0][link]"
+placeholder="PYQ URL"
+class="w-full border rounded-lg px-4 py-2">
+
+</div>
+
+
+
+<!-- YOUTUBE -->
+
+<div>
+
+<label class="font-medium">YouTube Lecture</label>
+
+<input
+name="units[${unitIndex}][youtubeLinks][0][title]"
+placeholder="Lecture Title"
+class="w-full border rounded-lg px-4 py-2 mb-2">
+
+<input
+name="units[${unitIndex}][youtubeLinks][0][link]"
+placeholder="YouTube URL"
+class="w-full border rounded-lg px-4 py-2">
+
+</div>
+
+</div>
+
+`;
+
+container.insertAdjacentHTML("beforeend", unitHTML);
+
+unitIndex++;
+
+}
+
+</script>
+
+
 </body>
 </html>
