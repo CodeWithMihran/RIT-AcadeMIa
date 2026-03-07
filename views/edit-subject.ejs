@@ -2,30 +2,21 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
 <title>Edit Subject | RIT Academia</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
-
 
 <body class="bg-gray-100 min-h-screen">
 
-<!-- ADMIN NAVBAR -->
 <%- include("partials/navbar-admin") %>
-
 
 <div class="max-w-6xl mx-auto p-8">
 
 <h1 class="text-3xl font-bold text-gray-800 mb-8">
 Edit Subject
 </h1>
-
-
-<!-- FLASH MESSAGES -->
 
 <% if (error.length > 0) { %>
 <div class="bg-red-100 text-red-700 px-4 py-3 rounded mb-6">
@@ -40,42 +31,33 @@ Edit Subject
 <% } %>
 
 
-
 <form action="/subjects/edit/<%= subject._id %>" method="POST"
 class="bg-white p-8 rounded-xl shadow-lg space-y-8">
 
 
-<!-- BASIC SUBJECT DETAILS -->
+<!-- BASIC DETAILS -->
 
 <div class="grid md:grid-cols-3 gap-6">
 
 <div>
 <label class="block font-medium mb-2">Subject Name</label>
-<input
-type="text"
-name="name"
+<input type="text" name="name"
 value="<%= subject.name %>"
 required
 class="w-full border rounded-lg px-4 py-2">
 </div>
 
-
 <div>
 <label class="block font-medium mb-2">Branch</label>
-<input
-type="text"
-name="branch"
+<input type="text" name="branch"
 value="<%= subject.branch %>"
 required
 class="w-full border rounded-lg px-4 py-2">
 </div>
 
-
 <div>
 <label class="block font-medium mb-2">Semester</label>
-<input
-type="number"
-name="semester"
+<input type="number" name="semester"
 value="<%= subject.semester %>"
 required
 class="w-full border rounded-lg px-4 py-2">
@@ -83,17 +65,13 @@ class="w-full border rounded-lg px-4 py-2">
 
 </div>
 
-
 <hr>
-
-
-<!-- UNITS -->
 
 <h2 class="text-xl font-semibold">Units</h2>
 
-
 <div class="space-y-8">
 
+<% if(subject.units && subject.units.length > 0){ %>
 
 <% subject.units.forEach((unit, uIndex) => { %>
 
@@ -103,7 +81,6 @@ class="w-full border rounded-lg px-4 py-2">
 Unit <%= unit.unitNumber %>
 </h3>
 
-
 <input type="hidden"
 name="units[<%= uIndex %>][unitNumber]"
 value="<%= unit.unitNumber %>">
@@ -112,46 +89,36 @@ value="<%= unit.unitNumber %>">
 <!-- UNIT TITLE -->
 
 <div class="mb-4">
-
 <label class="block font-medium mb-2">Unit Title</label>
-
 <input
 name="units[<%= uIndex %>][unitTitle]"
 value="<%= unit.unitTitle %>"
 class="w-full border rounded-lg px-4 py-2">
-
 </div>
-
 
 
 <!-- TOPICS -->
 
 <div class="mb-4">
-
-<label class="block font-medium mb-2">
-Topics
-</label>
+<label class="block font-medium mb-2">Topics</label>
 
 <input
 name="units[<%= uIndex %>][topics]"
-value="<%= unit.topics.map(t => t.title).join(', ') %>"
+value="<%= unit.topics ? unit.topics.map(t => t.title).join(', ') : '' %>"
 class="w-full border rounded-lg px-4 py-2">
 
 <p class="text-sm text-gray-500 mt-1">
 Separate topics using commas
 </p>
-
 </div>
-
 
 
 <!-- NOTES -->
 
 <div class="mb-4">
-
 <h4 class="font-semibold mb-2">Notes</h4>
 
-<% unit.notes.forEach((note, nIndex) => { %>
+<% if(unit.notes){ unit.notes.forEach((note, nIndex) => { %>
 
 <div class="grid grid-cols-2 gap-3 mb-2">
 
@@ -169,19 +136,17 @@ placeholder="Link">
 
 </div>
 
-<% }) %>
+<% }) } %>
 
 </div>
-
 
 
 <!-- BOOKS -->
 
 <div class="mb-4">
-
 <h4 class="font-semibold mb-2">Books</h4>
 
-<% unit.books.forEach((book, bIndex) => { %>
+<% if(unit.books){ unit.books.forEach((book, bIndex) => { %>
 
 <div class="grid grid-cols-2 gap-3 mb-2">
 
@@ -197,19 +162,17 @@ class="border rounded-lg px-3 py-2">
 
 </div>
 
-<% }) %>
+<% }) } %>
 
 </div>
-
 
 
 <!-- PYQS -->
 
 <div class="mb-4">
-
 <h4 class="font-semibold mb-2">PYQs</h4>
 
-<% unit.pyqs.forEach((pyq, pIndex) => { %>
+<% if(unit.pyqs){ unit.pyqs.forEach((pyq, pIndex) => { %>
 
 <div class="grid grid-cols-2 gap-3 mb-2">
 
@@ -225,10 +188,9 @@ class="border rounded-lg px-3 py-2">
 
 </div>
 
-<% }) %>
+<% }) } %>
 
 </div>
-
 
 
 <!-- YOUTUBE -->
@@ -237,7 +199,7 @@ class="border rounded-lg px-3 py-2">
 
 <h4 class="font-semibold mb-2">YouTube Lectures</h4>
 
-<% unit.youtubeLinks.forEach((video, vIndex) => { %>
+<% if(unit.youtubeLinks){ unit.youtubeLinks.forEach((video, vIndex) => { %>
 
 <div class="grid grid-cols-2 gap-3 mb-2">
 
@@ -253,31 +215,31 @@ class="border rounded-lg px-3 py-2">
 
 </div>
 
+<% }) } %>
+
+</div>
+
+</div>
+
 <% }) %>
 
+<% } else { %>
+
+<p class="text-gray-500">No units found for this subject.</p>
+
+<% } %>
+
 </div>
 
-
-</div>
-
-<% }) %>
-
-</div>
-
-
-<!-- SUBMIT -->
 
 <div class="pt-6">
 
 <button
 class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
-
 Update Subject
-
 </button>
 
 </div>
-
 
 </form>
 

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title><%= subject.name %> | RIT Academia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+<!-- USER NAVBAR -->
+<%- include("partials/navbar-user") %>
+
+
+<div class="max-w-6xl mx-auto p-8">
+
+<!-- SUBJECT HEADER -->
+
+<div class="bg-white rounded-xl shadow p-6 mb-8">
+
+<h1 class="text-3xl font-bold text-gray-800">
+<%= subject.name %>
+</h1>
+
+<p class="text-gray-600 mt-2">
+Branch: <span class="font-medium"><%= subject.branch %></span>
+|
+Semester: <span class="font-medium"><%= subject.semester %></span>
+</p>
+
+<p class="text-gray-500 mt-3">
+Total Units: <span class="font-semibold"><%= subject.units ? subject.units.length : 0 %></span>
+</p>
+
+</div>
+
+
+<!-- UNITS -->
+
+<% if(subject.units && subject.units.length > 0) { %>
+
+<div class="space-y-10">
+
+<% subject.units.forEach((unit) => { %>
+
+<div class="bg-white rounded-xl shadow p-6">
+
+<!-- UNIT TITLE -->
+
+<h2 class="text-xl font-bold text-blue-600 mb-4">
+Unit <%= unit.unitNumber %>: <%= unit.unitTitle %>
+</h2>
+
+
+<!-- TOPICS -->
+
+<div class="mb-6">
+
+<h3 class="font-semibold text-gray-800 mb-2">
+Topics
+</h3>
+
+<% if(unit.topics && unit.topics.length > 0) { %>
+
+<ul class="list-disc ml-6 text-gray-700 space-y-1">
+
+<% unit.topics.forEach(topic => { %>
+
+<li><%= topic.title %></li>
+
+<% }) %>
+
+</ul>
+
+<% } else { %>
+
+<p class="text-gray-400 text-sm">No topics added</p>
+
+<% } %>
+
+</div>
+
+
+
+<!-- NOTES -->
+
+<div class="mb-6">
+
+<h3 class="font-semibold text-gray-800 mb-2">
+Notes
+</h3>
+
+<% if(unit.notes && unit.notes.length > 0) { %>
+
+<div class="grid md:grid-cols-2 gap-3">
+
+<% unit.notes.forEach(note => { %>
+
+<a href="<%= note.link %>"
+target="_blank"
+class="bg-blue-50 hover:bg-blue-100 border rounded-lg p-3 block">
+
+<p class="font-medium text-blue-700">
+<%= note.title %>
+</p>
+
+<p class="text-xs text-gray-500">
+Open Resource
+</p>
+
+</a>
+
+<% }) %>
+
+</div>
+
+<% } else { %>
+
+<p class="text-gray-400 text-sm">No notes added</p>
+
+<% } %>
+
+</div>
+
+
+
+<!-- BOOKS -->
+
+<div class="mb-6">
+
+<h3 class="font-semibold text-gray-800 mb-2">
+Books
+</h3>
+
+<% if(unit.books && unit.books.length > 0) { %>
+
+<div class="grid md:grid-cols-2 gap-3">
+
+<% unit.books.forEach(book => { %>
+
+<a href="<%= book.link %>"
+target="_blank"
+class="bg-purple-50 hover:bg-purple-100 border rounded-lg p-3 block">
+
+<p class="font-medium text-purple-700">
+<%= book.title %>
+</p>
+
+<p class="text-xs text-gray-500">
+Open Book
+</p>
+
+</a>
+
+<% }) %>
+
+</div>
+
+<% } else { %>
+
+<p class="text-gray-400 text-sm">No books added</p>
+
+<% } %>
+
+</div>
+
+
+
+<!-- PYQs -->
+
+<div class="mb-6">
+
+<h3 class="font-semibold text-gray-800 mb-2">
+Previous Year Questions
+</h3>
+
+<% if(unit.pyqs && unit.pyqs.length > 0) { %>
+
+<div class="grid md:grid-cols-2 gap-3">
+
+<% unit.pyqs.forEach(pyq => { %>
+
+<a href="<%= pyq.link %>"
+target="_blank"
+class="bg-green-50 hover:bg-green-100 border rounded-lg p-3 block">
+
+<p class="font-medium text-green-700">
+<%= pyq.title %>
+</p>
+
+<p class="text-xs text-gray-500">
+Open PYQ
+</p>
+
+</a>
+
+<% }) %>
+
+</div>
+
+<% } else { %>
+
+<p class="text-gray-400 text-sm">No PYQs added</p>
+
+<% } %>
+
+</div>
+
+
+
+<!-- YOUTUBE -->
+
+<div>
+
+<h3 class="font-semibold text-gray-800 mb-2">
+YouTube Lectures
+</h3>
+
+<% if(unit.youtubeLinks && unit.youtubeLinks.length > 0) { %>
+
+<div class="grid md:grid-cols-2 gap-3">
+
+<% unit.youtubeLinks.forEach(video => { %>
+
+<a href="<%= video.link %>"
+target="_blank"
+class="bg-red-50 hover:bg-red-100 border rounded-lg p-3 block">
+
+<p class="font-medium text-red-600">
+<%= video.title %>
+</p>
+
+<p class="text-xs text-gray-500">
+Watch Lecture
+</p>
+
+</a>
+
+<% }) %>
+
+</div>
+
+<% } else { %>
+
+<p class="text-gray-400 text-sm">No videos added</p>
+
+<% } %>
+
+</div>
+
+
+</div>
+
+<% }) %>
+
+</div>
+
+<% } else { %>
+
+<div class="bg-white rounded-xl shadow p-8 text-center">
+
+<p class="text-gray-500">
+No units have been added for this subject yet.
+</p>
+
+</div>
+
+<% } %>
+
+
+</div>
+
+</body>
+</html>

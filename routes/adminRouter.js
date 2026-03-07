@@ -14,8 +14,8 @@ router.get("/users", isLoggedIn, checkRole(["admin"]), adminController.viewUsers
 router.post("/users/delete/:id", isLoggedIn, checkRole(["admin"]), adminController.deleteUser);
 
 // Admin manage subjects (optional)
-router.get("/subjects", isLoggedIn, checkRole(["admin"]), (req, res) => {
-    res.redirect("/subjects"); // redirect to subjectsRouter admin pages
-});
+// router.get("/subjects", isLoggedIn, checkRole(["admin"]), (req, res) => {
+//     res.render("edit-subject"); // redirect to subjectsRouter admin pages
+// });
 
 module.exports = router;

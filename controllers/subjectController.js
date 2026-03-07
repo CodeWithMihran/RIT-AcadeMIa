@@ -1,85 +1,163 @@
-const subjectModel = require("../models/subject-model"); // You will create this model
+const subjectModel = require("../models/subject-model");
 
-// Show subjects/content for logged-in user
+
+// =============================
+// Show subjects for students
+// =============================
 module.exports.showSubjects = async (req, res) => {
     try {
+
         const { branch, semester } = req.user;
 
-        // Fetch subjects for the user's branch and semester
-        const subjects = await subjectModel.find({ branch, semester });
+        const subjects = await subjectModel.find({
+            branch,
+            semester
+        });
 
         res.render("subjects", { user: req.user, subjects });
+
     } catch (err) {
+
         res.send(err.message);
+
     }
 };
 
-// Admin: Add subject/content
+
+
+// =============================
+// Admin: Add Subject
+// =============================
 module.exports.addSubject = async (req, res) => {
+
     try {
-        const { name, syllabusLink, notesLink, pyqsLink, ytLink } = req.body;
+
+        const { name, branch, semester } = req.body;
 
         await subjectModel.create({
+
             name,
-            branch: req.body.branch,
-            semester: req.body.semester,
-            syllabusLink,
-            notesLink,
-            pyqsLink,
-            ytLink
+            branch,
+            semester,
+
+            // VERY IMPORTANT
+            units: []
+
         });
 
         req.flash("success", "Subject added successfully");
-        res.redirect("/admin/subjects");
+        res.redirect("/admin");
+
     } catch (err) {
+
         res.send(err.message);
+
     }
+
 };
 
-// Admin: Edit subject
+
+
+// =============================
+// Admin: Edit Subject
+// =============================
 module.exports.editSubject = async (req, res) => {
+
     try {
+
         const { id } = req.params;
+
         const subject = await subjectModel.findById(id);
+
         if (!subject) {
+
             req.flash("error", "Subject not found");
-            return res.redirect("/admin/subjects");
+            return res.redirect("/admin");
+
         }
+
         res.render("edit-subject", { subject });
+
     } catch (err) {
+
         res.send(err.message);
+
     }
+
 };
 
-// Admin: Update subject
-module.exports.updateSubject = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { name, syllabusLink, notesLink, pyqsLink, ytLink } = req.body;
 
-        await subjectModel.findByIdAndUpdate(id, {
-            name,
-            syllabusLink,
-            notesLink,
-            pyqsLink,
-            ytLink
-        });
+
+// =============================
+// Admin: Update Subject
+// =============================
+module.exports.updateSubject = async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const updatedData = req.body;
+
+        await subjectModel.findByIdAndUpdate(id, updatedData);
 
         req.flash("success", "Subject updated successfully");
-        res.redirect("/admin/subjects");
+
+        res.redirect("/admin");
+
     } catch (err) {
+
         res.send(err.message);
+
     }
+
 };
 
-// Admin: Delete subject
+
+
+// =============================
+// Admin: Delete Subject
+// =============================
 module.exports.deleteSubject = async (req, res) => {
+
     try {
+
         const { id } = req.params;
+
         await subjectModel.findByIdAndDelete(id);
+
         req.flash("success", "Subject deleted successfully");
-        res.redirect("/admin/subjects");
+
+        res.redirect("/admin");
+
     } catch (err) {
+
         res.send(err.message);
+
     }
+
+};
+
+
+// Show single subject with units
+module.exports.viewSubject = async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const subject = await subjectModel.findById(id);
+
+        if (!subject) {
+            return res.send("Subject not found");
+        }
+
+        res.render("view-subject", { subject });
+
+    } catch (err) {
+
+        res.send(err.message);
+
+    }
+
 };
