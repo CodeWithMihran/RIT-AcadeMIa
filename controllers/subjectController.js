@@ -23,7 +23,7 @@ module.exports.showSubjects = async (req, res) => {
     } catch (err) {
 
         console.log(err);
-        res.send(err.message);
+        res.status(500).render("500");
 
     }
 
@@ -66,13 +66,56 @@ module.exports.addSubject = async (req, res) => {
 
     try {
 
-        const { name, branch, semester } = req.body;
+        const { name, branch, semester, units } = req.body;
+
+        const formattedUnits = [];
+
+        if (units) {
+
+            Object.keys(units).forEach((key) => {
+
+                const unit = units[key];
+
+                const topics = unit.topics
+                    ? unit.topics.split(",").map(t => ({ title: t.trim() }))
+                    : [];
+
+                formattedUnits.push({
+
+                    unitNumber: unit.unitNumber,
+                    unitTitle: unit.unitTitle,
+
+                    topics,
+
+                    notes: unit.notes
+                        ? Object.values(unit.notes).filter(n => n.title || n.link)
+                        : [],
+
+                    books: unit.books
+                        ? Object.values(unit.books).filter(b => b.title || b.link)
+                        : [],
+
+                    pyqs: unit.pyqs
+                        ? Object.values(unit.pyqs).filter(p => p.title || p.link)
+                        : [],
+
+                    youtubeLinks: unit.youtubeLinks
+                        ? Object.values(unit.youtubeLinks).filter(v => v.title || v.link)
+                        : []
+
+                });
+
+            });
+
+        }
 
         await subjectModel.create({
+
             name,
             branch,
             semester,
-            units: []
+            units: formattedUnits
+
         });
 
         req.flash("success", "Subject added successfully");
@@ -82,7 +125,7 @@ module.exports.addSubject = async (req, res) => {
     } catch (err) {
 
         console.log(err);
-        res.send(err.message);
+        res.status(500).render("500");
 
     }
 
@@ -113,7 +156,7 @@ module.exports.editSubject = async (req, res) => {
     } catch (err) {
 
         console.log(err);
-        res.send(err.message);
+        res.status(500).render("500");
 
     }
 
@@ -188,7 +231,7 @@ module.exports.updateSubject = async (req, res) => {
     } catch (err) {
 
         console.log(err);
-        res.send(err.message);
+        res.status(500).render("500");
 
     }
 
@@ -214,7 +257,7 @@ module.exports.deleteSubject = async (req, res) => {
     } catch (err) {
 
         console.log(err);
-        res.send(err.message);
+        res.status(500).render("500");
 
     }
 

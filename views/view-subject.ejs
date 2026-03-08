@@ -36,6 +36,13 @@ Semester: <span class="font-medium"><%= subject.semester %></span>
 Total Units: <span class="font-semibold"><%= subject.units ? subject.units.length : 0 %></span>
 </p>
 
+<div class="mt-4">
+<a href="/progress/<%= subject._id %>"
+class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium">
+📊 Track Progress
+</a>
+</div>
+
 </div>
 
 

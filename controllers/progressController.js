@@ -25,33 +25,55 @@ module.exports.showProgress = async (req, res) => {
             completed: true
         });
 
-        // Convert progress to easy lookup
+        // -----------------------
+        // Completed Topics Map
+        // -----------------------
+
         const completedMap = {};
 
         progress.forEach(p => {
             completedMap[`${p.unitIndex}-${p.topicIndex}`] = true;
         });
 
-        // ----------------------------
-        // Calculate subject progress
-        // ----------------------------
+
+        // -----------------------
+        // Subject Progress
+        // -----------------------
 
         let totalTopics = 0;
         let completedTopics = 0;
 
+        // -----------------------
+        // Unit Progress Array
+        // -----------------------
+
+        const unitProgress = [];
+
         subject.units.forEach((unit, uIndex) => {
+
+            let unitTotal = 0;
+            let unitCompleted = 0;
 
             unit.topics.forEach((topic, tIndex) => {
 
                 totalTopics++;
+                unitTotal++;
 
                 if (completedMap[`${uIndex}-${tIndex}`]) {
                     completedTopics++;
+                    unitCompleted++;
                 }
 
             });
 
+            const progressPercent = unitTotal === 0
+                ? 0
+                : Math.round((unitCompleted / unitTotal) * 100);
+
+            unitProgress.push(progressPercent);
+
         });
+
 
         const subjectProgress = totalTopics === 0
             ? 0
@@ -61,7 +83,8 @@ module.exports.showProgress = async (req, res) => {
         res.render("progress", {
             subject,
             completedMap,
-            subjectProgress
+            subjectProgress,
+            unitProgress
         });
 
     } catch (err) {
@@ -109,7 +132,7 @@ module.exports.toggleTopic = async (req, res) => {
 
         }
 
-        res.redirect("back");
+        res.redirect("/progress/" + subjectId);
 
     } catch (err) {
 
