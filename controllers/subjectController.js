@@ -5,6 +5,7 @@ const subjectModel = require("../models/subject-model");
 // Show subjects for students
 // =============================
 module.exports.showSubjects = async (req, res) => {
+
     try {
 
         const { branch, semester } = req.user;
@@ -14,13 +15,46 @@ module.exports.showSubjects = async (req, res) => {
             semester
         });
 
-        res.render("subjects", { user: req.user, subjects });
+        res.render("subjects", {
+            user: req.user,
+            subjects
+        });
 
     } catch (err) {
 
+        console.log(err);
         res.send(err.message);
 
     }
+
+};
+
+
+
+// =============================
+// View Single Subject
+// =============================
+module.exports.viewSubject = async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const subject = await subjectModel.findById(id);
+
+        if (!subject) {
+            return res.status(404).render("404");
+        }
+
+        res.render("view-subject", { subject });
+
+    } catch (err) {
+
+        console.log(err);
+        res.status(500).render("500");
+
+    }
+
 };
 
 
@@ -35,21 +69,19 @@ module.exports.addSubject = async (req, res) => {
         const { name, branch, semester } = req.body;
 
         await subjectModel.create({
-
             name,
             branch,
             semester,
-
-            // VERY IMPORTANT
             units: []
-
         });
 
         req.flash("success", "Subject added successfully");
+
         res.redirect("/admin");
 
     } catch (err) {
 
+        console.log(err);
         res.send(err.message);
 
     }
@@ -80,6 +112,7 @@ module.exports.editSubject = async (req, res) => {
 
     } catch (err) {
 
+        console.log(err);
         res.send(err.message);
 
     }
@@ -96,10 +129,57 @@ module.exports.updateSubject = async (req, res) => {
     try {
 
         const { id } = req.params;
+        const { name, branch, semester, units } = req.body;
 
-        const updatedData = req.body;
+        const formattedUnits = [];
 
-        await subjectModel.findByIdAndUpdate(id, updatedData);
+        if (units) {
+
+            Object.keys(units).forEach((key) => {
+
+                const unit = units[key];
+
+                const topics = unit.topics
+                    ? unit.topics.split(",").map(t => ({ title: t.trim() }))
+                    : [];
+
+                formattedUnits.push({
+
+                    unitNumber: unit.unitNumber,
+                    unitTitle: unit.unitTitle,
+
+                    topics,
+
+                    notes: unit.notes
+                        ? Object.values(unit.notes).filter(n => n.title || n.link)
+                        : [],
+
+                    books: unit.books
+                        ? Object.values(unit.books).filter(b => b.title || b.link)
+                        : [],
+
+                    pyqs: unit.pyqs
+                        ? Object.values(unit.pyqs).filter(p => p.title || p.link)
+                        : [],
+
+                    youtubeLinks: unit.youtubeLinks
+                        ? Object.values(unit.youtubeLinks).filter(v => v.title || v.link)
+                        : []
+
+                });
+
+            });
+
+        }
+
+        await subjectModel.findByIdAndUpdate(id, {
+
+            name,
+            branch,
+            semester,
+            units: formattedUnits
+
+        });
 
         req.flash("success", "Subject updated successfully");
 
@@ -107,6 +187,7 @@ module.exports.updateSubject = async (req, res) => {
 
     } catch (err) {
 
+        console.log(err);
         res.send(err.message);
 
     }
@@ -132,30 +213,7 @@ module.exports.deleteSubject = async (req, res) => {
 
     } catch (err) {
 
-        res.send(err.message);
-
-    }
-
-};
-
-
-// Show single subject with units
-module.exports.viewSubject = async (req, res) => {
-
-    try {
-
-        const { id } = req.params;
-
-        const subject = await subjectModel.findById(id);
-
-        if (!subject) {
-            return res.send("Subject not found");
-        }
-
-        res.render("view-subject", { subject });
-
-    } catch (err) {
-
+        console.log(err);
         res.send(err.message);
 
     }
