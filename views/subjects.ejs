@@ -2,250 +2,215 @@
 <html lang="en">
 
 <head>
-<meta charset="UTF-8">
-<title>Subjects | RIT Academia</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjects | RIT AcadeMIA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-<script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1a1a1a;
+            background-color: #fbfbfa;
+            scroll-behavior: smooth;
+        }
+        .notion-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        .resource-pill {
+            transition: all 0.2s ease;
+            border: 1px solid #f1f1f1;
+            background: #fcfcfc;
+        }
+        .resource-pill:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+            transform: translateX(4px);
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #000;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        /* Custom Tag Colors */
+        .tag-notes { color: #2383e2; background: rgba(35, 131, 226, 0.1); }
+        .tag-books { color: #8d4ee8; background: rgba(141, 78, 232, 0.1); }
+        .tag-pyqs { color: #e03e3e; background: rgba(224, 62, 62, 0.1); }
+    </style>
 </head>
 
-
-<body class="bg-gray-100 min-h-screen">
-
-<!-- USER NAVBAR -->
-<%- include("partials/navbar-user") %>
-
-
-<div class="max-w-7xl mx-auto px-6 py-10">
-
-<!-- Page Header -->
-
-<div class="mb-10">
-<h1 class="text-3xl font-bold text-gray-800">
-Subjects for <%= user.branch %> — Semester <%= user.semester %>
-</h1>
-<p class="text-gray-500 mt-2">
-Access notes, books, PYQs, lectures and track your progress.
-</p>
-</div>
-
-
-
-<!-- Flash Messages -->
-
-<% if (error.length > 0) { %>
-
-<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-<%= error %>
-</div>
-
-<% } %>
-
-
-<% if (success.length > 0) { %>
-
-<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-<%= success %>
-</div>
-
-<% } %>
-
-
-
-<!-- No Subjects -->
-
-<% if (subjects.length === 0) { %>
-
-<div class="bg-white p-10 rounded-xl shadow text-center">
-<p class="text-gray-600 text-lg">
-No subjects available yet for your branch and semester.
-</p>
-</div>
-
-<% } else { %>
-
-
-
-<!-- SUBJECT GRID -->
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-<% subjects.forEach(subject => { %>
-
-<div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition">
-
-<!-- Subject Title -->
-
-<div class="flex justify-between items-center mb-4">
-
-<h2 class="text-xl font-bold text-gray-800">
-<%= subject.name %>
-</h2>
-
-<a 
-href="/progress/<%= subject._id %>"
-class="bg-indigo-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
->
-Progress
-</a>
-
-</div>
-
-
-
-<!-- Units -->
-
-<% subject.units.forEach((unit, unitIndex) => { %>
-
-<div class="border-t pt-4 mt-4">
-
-<h3 class="text-lg font-semibold text-gray-700 mb-3">
-Unit <%= unit.unitNumber %>: <%= unit.unitTitle %>
-</h3>
-
-
-
-<!-- NOTES -->
-
-<% if(unit.notes.length > 0) { %>
-
-<div class="mb-3">
-
-<p class="font-semibold text-gray-700">Notes</p>
-
-<ul class="list-disc list-inside text-sm text-blue-600">
-
-<% unit.notes.forEach(note => { %>
-
-<li>
-<a href="<%= note.link %>" target="_blank" class="hover:underline">
-<%= note.title %>
-</a>
-</li>
-
-<% }) %>
-
-</ul>
-
-</div>
-
-<% } %>
-
-
-
-<!-- BOOKS -->
-
-<% if(unit.books.length > 0) { %>
-
-<div class="mb-3">
-
-<p class="font-semibold text-gray-700">Books</p>
-
-<ul class="list-disc list-inside text-sm text-blue-600">
-
-<% unit.books.forEach(book => { %>
-
-<li>
-<a href="<%= book.link %>" target="_blank" class="hover:underline">
-<%= book.title %>
-</a>
-</li>
-
-<% }) %>
-
-</ul>
-
-</div>
-
-<% } %>
-
-
-
-<!-- PYQs -->
-
-<% if(unit.pyqs.length > 0) { %>
-
-<div class="mb-3">
-
-<p class="font-semibold text-gray-700">PYQs</p>
-
-<ul class="list-disc list-inside text-sm text-blue-600">
-
-<% unit.pyqs.forEach(pyq => { %>
-
-<li>
-<a href="<%= pyq.link %>" target="_blank" class="hover:underline">
-<%= pyq.title %>
-</a>
-</li>
-
-<% }) %>
-
-</ul>
-
-</div>
-
-<% } %>
-
-
-
-<!-- YOUTUBE LECTURES -->
-
-<% if(unit.youtubeLinks.length > 0) { %>
-
-<div class="mt-4">
-
-<p class="font-semibold text-gray-700 mb-2">
-Lectures
-</p>
-
-<div class="space-y-4">
-
-<% unit.youtubeLinks.forEach(video => { %>
-
-<div>
-
-<p class="text-sm font-medium mb-1">
-<%= video.title %>
-</p>
-
-<div class="aspect-video">
-
-<iframe
-class="w-full h-full rounded-lg"
-src="<%= video.link.replace('watch?v=','embed/') %>"
-title="YouTube video"
-allowfullscreen
-></iframe>
-
-</div>
-
-</div>
-
-<% }) %>
-
-</div>
-
-</div>
-
-<% } %>
-
-
-
-</div>
-
-<% }) %>
-
-</div>
-
-<% }) %>
-
-</div>
-
-<% } %>
-
-
-</div>
-
+<body class="min-h-screen">
+
+    <%- include("partials/navbar-user") %>
+
+    <div class="max-w-7xl mx-auto px-6 pt-32 pb-20">
+
+        <div class="mb-16 border-b border-gray-100 pb-10" data-aos="fade-up">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                <div>
+                    <h1 class="text-4xl font-black tracking-tighter text-[#1a1a1a]">
+                        Curriculum Vault
+                    </h1>
+                    <p class="text-gray-500 mt-2 font-medium">
+                        <%= user.branch %> <span class="mx-2 text-gray-300">|</span> Semester <%= user.semester %>
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Resources Found:</span>
+                    <span class="bg-black text-white px-3 py-1 rounded-full text-xs font-bold"><%= subjects.length %> Subjects</span>
+                </div>
+            </div>
+        </div>
+
+        <% if (error.length > 0) { %>
+            <div class="bg-red-50 border border-red-100 text-red-600 px-5 py-4 rounded-2xl mb-8 text-sm font-bold">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <% if (success.length > 0) { %>
+            <div class="bg-green-50 border border-green-100 text-green-600 px-5 py-4 rounded-2xl mb-8 text-sm font-bold">
+                <%= success %>
+            </div>
+        <% } %>
+
+        <% if (subjects.length === 0) { %>
+            <div class="notion-card p-20 rounded-[2.5rem] text-center border-dashed border-2">
+                <p class="text-gray-400 font-bold italic text-lg">Your academic vault is currently empty.</p>
+            </div>
+        <% } else { %>
+
+            <div class="space-y-20">
+                <% subjects.forEach((subject, subIndex) => { %>
+                    
+                    <div class="subject-block" data-aos="fade-up">
+                        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+                            <div class="flex items-center gap-4">
+                                <div class="h-12 w-12 bg-[#0a0a0a] text-white rounded-2xl flex items-center justify-center text-xl font-black italic shadow-lg">
+                                    <%= subIndex + 1 %>
+                                </div>
+                                <h2 class="text-3xl font-black tracking-tight text-[#1a1a1a]">
+                                    <%= subject.name %>
+                                </h2>
+                            </div>
+                            <a href="/progress/<%= subject._id %>" 
+                               class="group flex items-center gap-2 border border-gray-200 px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all">
+                                <span>Track Progress</span>
+                                <span class="group-hover:translate-x-1 transition-transform">→</span>
+                            </a>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <% subject.units.forEach((unit, unitIndex) => { %>
+                                <div class="notion-card rounded-[2rem] p-8 flex flex-col h-full">
+                                    <div class="flex items-center gap-3 mb-6">
+                                        <span class="text-[10px] font-black bg-gray-100 text-gray-500 px-2 py-1 rounded">UNIT <%= unit.unitNumber %></span>
+                                        <h3 class="text-lg font-extrabold text-[#1a1a1a] leading-tight">
+                                            <%= unit.unitTitle %>
+                                        </h3>
+                                    </div>
+
+                                    <div class="space-y-6 flex-grow">
+                                        
+                                        <div class="grid grid-cols-1 gap-2">
+                                            <% if(unit.notes.length > 0) { %>
+                                                <div class="mb-2">
+                                                    <span class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 block">Study Notes</span>
+                                                    <div class="space-y-1">
+                                                        <% unit.notes.forEach(note => { %>
+                                                            <a href="<%= note.link %>" target="_blank" class="resource-pill flex items-center justify-between p-3 rounded-xl text-sm font-medium">
+                                                                <span class="flex items-center gap-3">📄 <span class="truncate max-w-[200px] md:max-w-xs"><%= note.title %></span></span>
+                                                                <span class="text-[10px] font-bold tag-notes px-2 py-0.5 rounded">PDF</span>
+                                                            </a>
+                                                        <% }) %>
+                                                    </div>
+                                                </div>
+                                            <% } %>
+
+                                            <% if(unit.books.length > 0) { %>
+                                                <div class="mb-2">
+                                                    <span class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 block">Reference Books</span>
+                                                    <div class="space-y-1">
+                                                        <% unit.books.forEach(book => { %>
+                                                            <a href="<%= book.link %>" target="_blank" class="resource-pill flex items-center justify-between p-3 rounded-xl text-sm font-medium">
+                                                                <span class="flex items-center gap-3">📖 <span class="truncate max-w-[200px] md:max-w-xs"><%= book.title %></span></span>
+                                                                <span class="text-[10px] font-bold tag-books px-2 py-0.5 rounded">BOOK</span>
+                                                            </a>
+                                                        <% }) %>
+                                                    </div>
+                                                </div>
+                                            <% } %>
+
+                                            <% if(unit.pyqs.length > 0) { %>
+                                                <div class="mb-2">
+                                                    <span class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 block">Question Papers</span>
+                                                    <div class="space-y-1">
+                                                        <% unit.pyqs.forEach(pyq => { %>
+                                                            <a href="<%= pyq.link %>" target="_blank" class="resource-pill flex items-center justify-between p-3 rounded-xl text-sm font-medium">
+                                                                <span class="flex items-center gap-3">🎯 <span class="truncate max-w-[200px] md:max-w-xs"><%= pyq.title %></span></span>
+                                                                <span class="text-[10px] font-bold tag-pyqs px-2 py-0.5 rounded">PYQ</span>
+                                                            </a>
+                                                        <% }) %>
+                                                    </div>
+                                                </div>
+                                            <% } %>
+                                        </div>
+
+                                        <% if(unit.youtubeLinks.length > 0) { %>
+                                            <div class="pt-6 border-t border-gray-50">
+                                                <span class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 mb-4 block">Video Tutorials</span>
+                                                <div class="space-y-4">
+                                                    <% unit.youtubeLinks.forEach(video => { %>
+                                                        <div class="group/vid">
+                                                            <p class="text-xs font-bold mb-2 text-gray-600 group-hover/vid:text-black transition-colors"><%= video.title %></p>
+                                                            <div class="video-container shadow-sm group-hover/vid:shadow-md transition-shadow">
+                                                                <iframe 
+                                                                    src="<%= video.link.replace('watch?v=','embed/') %>" 
+                                                                    title="YouTube video" 
+                                                                    allowfullscreen
+                                                                    loading="lazy"
+                                                                ></iframe>
+                                                            </div>
+                                                        </div>
+                                                    <% }) %>
+                                                </div>
+                                            </div>
+                                        <% } %>
+
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <% if (subIndex < subjects.length - 1) { %>
+                        <div class="h-[1px] w-full bg-gray-100"></div>
+                    <% } %>
+
+                <% }) %>
+            </div>
+        <% } %>
+    </div>
+
+    <%- include("partials/footer-user") %>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+    </script>
 </body>
+
 </html>

@@ -2,237 +2,182 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Subject | RIT AcadeMIA Console</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-<meta charset="UTF-8">
-<title>Add Subject | RIT Academia</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script src="https://cdn.tailwindcss.com"></script>
-
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1a1a1a;
+            background-color: #fbfbfa;
+            scroll-behavior: smooth;
+        }
+        .notion-input {
+            border: 1px solid #e5e7eb;
+            background: white;
+            transition: all 0.2s ease;
+        }
+        .notion-input:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.05);
+        }
+        .unit-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-left: 4px solid #0a0a0a;
+            transition: transform 0.2s ease;
+        }
+        .section-label {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #9ca3af;
+        }
+    </style>
 </head>
 
-
-<body class="bg-gray-100 min-h-screen">
-
-<!-- ADMIN NAVBAR -->
-<%- include("partials/navbar-admin") %>
-
-
-<div class="max-w-5xl mx-auto p-8">
-
-<h1 class="text-3xl font-bold mb-8 text-gray-800">
-Add New Subject
-</h1>
-
-
-<!-- FLASH MESSAGES -->
-
-<% if (error.length > 0) { %>
-<div class="bg-red-100 text-red-700 px-4 py-3 rounded mb-5">
-<%= error %>
-</div>
-<% } %>
-
-<% if (success.length > 0) { %>
-<div class="bg-green-100 text-green-700 px-4 py-3 rounded mb-5">
-<%= success %>
-</div>
-<% } %>
-
-
-<form action="/subjects/add" method="POST" class="bg-white shadow-lg rounded-xl p-8 space-y-6">
-
-
-<!-- SUBJECT DETAILS -->
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-<div>
-<label class="block font-medium mb-2">Subject Name</label>
-<input name="name" required
-class="w-full border rounded-lg px-4 py-2">
-</div>
-
-<div>
-<label class="block font-medium mb-2">Branch</label>
-<input name="branch" required
-class="w-full border rounded-lg px-4 py-2">
-</div>
-
-<div>
-<label class="block font-medium mb-2">Semester</label>
-<input type="number" name="semester" required
-class="w-full border rounded-lg px-4 py-2">
-</div>
-
-</div>
-
-
-
-<!-- UNITS SECTION -->
-
-<h2 class="text-xl font-semibold mt-6">
-Units
-</h2>
-
-<div id="unitsContainer" class="space-y-6">
-
-</div>
-
-
-<button type="button"
-onclick="addUnit()"
-class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
-
-+ Add Unit
-
-</button>
-
-
-
-<div class="pt-6">
-
-<button
-class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
-
-Create Subject
-
-</button>
-
-</div>
-
-</form>
-
-</div>
-
-
-<script>
-
-let unitIndex = 0;
-
-function addUnit(){
-
-const container = document.getElementById("unitsContainer");
-
-const unitHTML = `
-
-<div class="border rounded-lg p-6 bg-gray-50 space-y-4">
-
-<h3 class="text-lg font-semibold">Unit ${unitIndex + 1}</h3>
-
-<input type="hidden" name="units[${unitIndex}][unitNumber]" value="${unitIndex + 1}">
-
-<div>
-<label class="block font-medium mb-1">Unit Title</label>
-<input name="units[${unitIndex}][unitTitle]" required
-class="w-full border rounded-lg px-4 py-2">
-</div>
-
-
-<!-- TOPICS -->
-
-<div>
-
-<label class="font-medium">Topics (comma separated)</label>
-
-<input
-name="units[${unitIndex}][topics]"
-placeholder="Topic1, Topic2, Topic3"
-class="w-full border rounded-lg px-4 py-2">
-
-</div>
-
-
-<!-- NOTES -->
-
-<div>
-
-<label class="font-medium">Notes Link</label>
-
-<input
-name="units[${unitIndex}][notes][0][title]"
-placeholder="Notes Title"
-class="w-full border rounded-lg px-4 py-2 mb-2">
-
-<input
-name="units[${unitIndex}][notes][0][link]"
-placeholder="Notes URL"
-class="w-full border rounded-lg px-4 py-2">
-
-</div>
-
-
-
-<!-- BOOKS -->
-
-<div>
-
-<label class="font-medium">Book Link</label>
-
-<input
-name="units[${unitIndex}][books][0][title]"
-placeholder="Book Title"
-class="w-full border rounded-lg px-4 py-2 mb-2">
-
-<input
-name="units[${unitIndex}][books][0][link]"
-placeholder="Book URL"
-class="w-full border rounded-lg px-4 py-2">
-
-</div>
-
-
-
-<!-- PYQS -->
-
-<div>
-
-<label class="font-medium">PYQ Link</label>
-
-<input
-name="units[${unitIndex}][pyqs][0][title]"
-placeholder="PYQ Title"
-class="w-full border rounded-lg px-4 py-2 mb-2">
-
-<input
-name="units[${unitIndex}][pyqs][0][link]"
-placeholder="PYQ URL"
-class="w-full border rounded-lg px-4 py-2">
-
-</div>
-
-
-
-<!-- YOUTUBE -->
-
-<div>
-
-<label class="font-medium">YouTube Lecture</label>
-
-<input
-name="units[${unitIndex}][youtubeLinks][0][title]"
-placeholder="Lecture Title"
-class="w-full border rounded-lg px-4 py-2 mb-2">
-
-<input
-name="units[${unitIndex}][youtubeLinks][0][link]"
-placeholder="YouTube URL"
-class="w-full border rounded-lg px-4 py-2">
-
-</div>
-
-</div>
-
-`;
-
-container.insertAdjacentHTML("beforeend", unitHTML);
-
-unitIndex++;
-
-}
-
-</script>
-
-
+<body class="min-h-screen">
+
+    <%- include("partials/navbar-admin") %>
+
+    <div class="max-w-5xl mx-auto px-6 pt-32 pb-20">
+        
+        <div class="mb-12 border-b border-gray-100 pb-10" data-aos="fade-up">
+            <h1 class="text-4xl font-black tracking-tighter text-[#1a1a1a] italic">
+                Create <span class="text-gray-400 font-light not-italic">New Subject</span>
+            </h1>
+            <p class="text-gray-500 mt-2 font-medium">Define core curriculum parameters and upload academic resources.</p>
+        </div>
+
+        <% if (error.length > 0) { %>
+            <div class="bg-red-50 border border-red-100 text-red-600 px-5 py-4 rounded-2xl mb-8 text-sm font-bold flex items-center gap-3">
+                <span class="text-lg">⚠️</span> <%= error %>
+            </div>
+        <% } %>
+
+        <% if (success.length > 0) { %>
+            <div class="bg-green-50 border border-green-100 text-green-600 px-5 py-4 rounded-2xl mb-8 text-sm font-bold flex items-center gap-3">
+                <span class="text-lg">✅</span> <%= success %>
+            </div>
+        <% } %>
+
+        <form action="/subjects/add" method="POST" class="space-y-10" data-aos="fade-up" data-aos-delay="100">
+            
+            <div class="bg-white border border-gray-200 rounded-[2rem] p-8 md:p-10 shadow-sm">
+                <h2 class="section-label mb-6">Subject Parameters</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-gray-700">Subject Name</label>
+                        <input name="name" required placeholder="e.g. Discrete Structures"
+                            class="notion-input w-full px-4 py-3 rounded-xl text-sm font-medium">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-gray-700">Branch</label>
+                        <input name="branch" required placeholder="e.g. CSE"
+                            class="notion-input w-full px-4 py-3 rounded-xl text-sm font-medium">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-gray-700">Semester</label>
+                        <input type="number" name="semester" required placeholder="1-8"
+                            class="notion-input w-full px-4 py-3 rounded-xl text-sm font-medium">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <h2 class="section-label">Curriculum Units</h2>
+                <div class="h-[1px] flex-grow bg-gray-100"></div>
+            </div>
+
+            <div id="unitsContainer" class="space-y-8">
+                </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-6">
+                <button type="button" onclick="addUnit()"
+                    class="group flex items-center gap-3 bg-white border-2 border-dashed border-gray-200 text-gray-500 px-8 py-4 rounded-2xl font-bold hover:border-blue-500 hover:text-blue-500 transition-all w-full md:w-auto">
+                    <span class="text-xl leading-none">+</span>
+                    <span>Append New Unit</span>
+                </button>
+
+                <button class="bg-[#0a0a0a] text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-black transition-all shadow-xl shadow-gray-200 w-full md:w-auto active:scale-95">
+                    Finalize & Create Subject
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        let unitIndex = 0;
+
+        function addUnit() {
+            const container = document.getElementById("unitsContainer");
+            const unitHTML = `
+                <div class="unit-card rounded-[2rem] p-8 md:p-10 shadow-sm space-y-8 animate-in fade-in duration-500">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-black italic">Unit 0${unitIndex + 1}</h3>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Configuration Mode</span>
+                    </div>
+
+                    <input type="hidden" name="units[${unitIndex}][unitNumber]" value="${unitIndex + 1}">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-gray-600">Unit Title</label>
+                            <input name="units[${unitIndex}][unitTitle]" required placeholder="e.g. Graph Theory"
+                                class="notion-input w-full px-4 py-3 rounded-xl text-sm font-medium">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-gray-600">Topics (Comma separated)</label>
+                            <input name="units[${unitIndex}][topics]" placeholder="BFS, DFS, Dijkstra..."
+                                class="notion-input w-full px-4 py-3 rounded-xl text-sm font-medium">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+                        <div class="p-5 bg-gray-50 rounded-2xl space-y-3">
+                            <p class="section-label text-blue-500">Notes Link</p>
+                            <input name="units[${unitIndex}][notes][0][title]" placeholder="Title" class="notion-input w-full px-3 py-2 rounded-lg text-xs">
+                            <input name="units[${unitIndex}][notes][0][link]" placeholder="URL" class="notion-input w-full px-3 py-2 rounded-lg text-xs">
+                        </div>
+
+                        <div class="p-5 bg-gray-50 rounded-2xl space-y-3">
+                            <p class="section-label text-purple-500">Book Link</p>
+                            <input name="units[${unitIndex}][books][0][title]" placeholder="Title" class="notion-input w-full px-3 py-2 rounded-lg text-xs">
+                            <input name="units[${unitIndex}][books][0][link]" placeholder="URL" class="notion-input w-full px-3 py-2 rounded-lg text-xs">
+                        </div>
+
+                        <div class="p-5 bg-gray-50 rounded-2xl space-y-3">
+                            <p class="section-label text-red-500">PYQ Link</p>
+                            <input name="units[${unitIndex}][pyqs][0][title]" placeholder="Title" class="notion-input w-full px-3 py-2 rounded-lg text-xs">
+                            <input name="units[${unitIndex}][pyqs][0][link]" placeholder="URL" class="notion-input w-full px-3 py-2 rounded-lg text-xs">
+                        </div>
+
+                        <div class="p-5 bg-gray-50 rounded-2xl space-y-3 border-2 border-red-50">
+                            <p class="section-label text-red-600">YouTube Lecture</p>
+                            <input name="units[${unitIndex}][youtubeLinks][0][title]" placeholder="Title" class="notion-input w-full px-3 py-2 rounded-lg text-xs">
+                            <input name="units[${unitIndex}][youtubeLinks][0][link]" placeholder="URL" class="notion-input w-full px-3 py-2 rounded-lg text-xs">
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML("beforeend", unitHTML);
+            unitIndex++;
+        }
+
+        // Initialize with one unit
+        window.onload = () => addUnit();
+    </script>
+
+    <%- include("partials/footer-admin") %>
 </body>
 </html>
