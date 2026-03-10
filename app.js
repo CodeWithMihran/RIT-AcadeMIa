@@ -82,17 +82,17 @@ app.use("/progress", progressRoutes);
 // ------------------
 // 404 Page
 // ------------------
-// app.use((req, res) => {
-//     res.status(404).render("404", { url: req.originalUrl });
-// });
+app.use((req, res) => {
+    res.status(404).render("404", { url: req.originalUrl });
+});
 
 // ------------------
 // Global Error Handler
 // ------------------
-// app.use((err, req, res, next) => {
-//     console.error(err.stack);
-//     res.status(500).render("500", { error: err });
-// });
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).render("500", { error: err });
+});
 
 // ------------------
 // Start Server
