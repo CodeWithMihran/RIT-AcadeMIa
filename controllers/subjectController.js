@@ -238,6 +238,77 @@ module.exports.updateSubject = async (req, res) => {
 };
 
 
+// =============================
+// Show All Progress for students
+// =============================
+const progressModel = require("../models/progress-model");
+
+module.exports.showAllProgress = async (req, res) => {
+    try {
+
+        const { branch, semester, _id: userId } = req.user;
+
+        const subjects = await subjectModel.find({
+            branch,
+            semester
+        });
+
+        const subjectProgressMap = {};
+
+        for (let subject of subjects) {
+
+            const progress = await progressModel.find({
+                user: userId,
+                subject: subject._id,
+                completed: true
+            });
+
+            const completedMap = {};
+
+            progress.forEach(p => {
+                completedMap[`${p.unitIndex}-${p.topicIndex}`] = true;
+            });
+
+            let totalTopics = 0;
+            let completedTopics = 0;
+
+            subject.units.forEach((unit, uIndex) => {
+
+                unit.topics.forEach((topic, tIndex) => {
+
+                    totalTopics++;
+
+                    if (completedMap[`${uIndex}-${tIndex}`]) {
+                        completedTopics++;
+                    }
+
+                });
+
+            });
+
+            const percent = totalTopics === 0
+                ? 0
+                : Math.round((completedTopics / totalTopics) * 100);
+
+            subjectProgressMap[subject._id] = percent;
+
+        }
+
+        res.render("all-progress", {
+            subjects,
+            user: req.user,
+            subjectProgressMap
+        });
+
+    } catch (err) {
+
+        console.log(err);
+        res.status(500).render("500");
+
+    }
+};
+
+
 
 // =============================
 // Admin: Delete Subject

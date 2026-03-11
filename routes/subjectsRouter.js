@@ -31,11 +31,15 @@ router.post("/delete/:id", isLoggedIn, checkRole(["admin"]), subjectController.d
 // STUDENT ROUTES
 // ----------------------
 
-// List subjects
+// 1. List subjects
 router.get("/", isLoggedIn, subjectController.showSubjects);
 
+// 2. Global Progress Page (ADDED THIS LINE)
+// It MUST be above the /:id route to prevent the CastError
+router.get("/progress", isLoggedIn, subjectController.showAllProgress);
 
-// View single subject (⚠️ ALWAYS LAST)
+
+// 3. View single subject (⚠️ ALWAYS LAST)
 router.get("/:id", isLoggedIn, subjectController.viewSubject);
 
 

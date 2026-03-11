@@ -40,6 +40,16 @@
         }
         pre::-webkit-scrollbar { height: 4px; }
         pre::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        
+        /* Centering Logic for the Watermark */
+        .watermark-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -50,7 +60,7 @@
     <div class="px-6 w-full flex justify-center">
         <div class="error-card rounded-[2.5rem] p-10 md:p-16 text-center relative overflow-hidden shadow-2xl">
             
-            <div class="text-[120px] font-black tracking-tighter leading-none text-white/5 absolute -top-4 -left-4 italic select-none">
+            <div class="watermark-center text-[180px] font-black tracking-tighter leading-none text-white/5 italic select-none">
                 500
             </div>
 

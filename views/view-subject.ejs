@@ -2,284 +2,227 @@
 <html lang="en">
 
 <head>
-<meta charset="UTF-8">
-<title><%= subject.name %> | RIT Academia</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= subject.name %> | RIT AcadeMIA</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-<script src="https://cdn.tailwindcss.com"></script>
-
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1a1a1a;
+            background-color: #fbfbfa;
+            scroll-behavior: smooth;
+        }
+        .notion-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        .sidebar-link {
+            transition: all 0.2s ease;
+            border-left: 2px solid transparent;
+        }
+        .sidebar-link:hover {
+            background: #f3f4f6;
+            border-left-color: #1a1a1a;
+        }
+        .resource-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .resource-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+        }
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            background: #000;
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .sticky-side {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100 min-h-screen">
-
-<!-- USER NAVBAR -->
-<%- include("partials/navbar-user") %>
-
-
-<div class="max-w-6xl mx-auto p-8">
-
-<!-- SUBJECT HEADER -->
-
-<div class="bg-white rounded-xl shadow p-6 mb-8">
-
-<h1 class="text-3xl font-bold text-gray-800">
-<%= subject.name %>
-</h1>
-
-<p class="text-gray-600 mt-2">
-Branch: <span class="font-medium"><%= subject.branch %></span>
-|
-Semester: <span class="font-medium"><%= subject.semester %></span>
-</p>
-
-<p class="text-gray-500 mt-3">
-Total Units: <span class="font-semibold"><%= subject.units ? subject.units.length : 0 %></span>
-</p>
-
-<div class="mt-4">
-<a href="/progress/<%= subject._id %>"
-class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium">
-📊 Track Progress
-</a>
-</div>
-
-</div>
-
-
-<!-- UNITS -->
-
-<% if(subject.units && subject.units.length > 0) { %>
-
-<div class="space-y-10">
-
-<% subject.units.forEach((unit) => { %>
-
-<div class="bg-white rounded-xl shadow p-6">
-
-<!-- UNIT TITLE -->
-
-<h2 class="text-xl font-bold text-blue-600 mb-4">
-Unit <%= unit.unitNumber %>: <%= unit.unitTitle %>
-</h2>
-
-
-<!-- TOPICS -->
-
-<div class="mb-6">
-
-<h3 class="font-semibold text-gray-800 mb-2">
-Topics
-</h3>
-
-<% if(unit.topics && unit.topics.length > 0) { %>
-
-<ul class="list-disc ml-6 text-gray-700 space-y-1">
-
-<% unit.topics.forEach(topic => { %>
-
-<li><%= topic.title %></li>
-
-<% }) %>
-
-</ul>
-
-<% } else { %>
-
-<p class="text-gray-400 text-sm">No topics added</p>
-
-<% } %>
-
-</div>
-
-
-
-<!-- NOTES -->
-
-<div class="mb-6">
-
-<h3 class="font-semibold text-gray-800 mb-2">
-Notes
-</h3>
-
-<% if(unit.notes && unit.notes.length > 0) { %>
-
-<div class="grid md:grid-cols-2 gap-3">
-
-<% unit.notes.forEach(note => { %>
-
-<a href="<%= note.link %>"
-target="_blank"
-class="bg-blue-50 hover:bg-blue-100 border rounded-lg p-3 block">
-
-<p class="font-medium text-blue-700">
-<%= note.title %>
-</p>
-
-<p class="text-xs text-gray-500">
-Open Resource
-</p>
-
-</a>
-
-<% }) %>
-
-</div>
-
-<% } else { %>
-
-<p class="text-gray-400 text-sm">No notes added</p>
-
-<% } %>
-
-</div>
-
-
-
-<!-- BOOKS -->
-
-<div class="mb-6">
-
-<h3 class="font-semibold text-gray-800 mb-2">
-Books
-</h3>
-
-<% if(unit.books && unit.books.length > 0) { %>
-
-<div class="grid md:grid-cols-2 gap-3">
-
-<% unit.books.forEach(book => { %>
-
-<a href="<%= book.link %>"
-target="_blank"
-class="bg-purple-50 hover:bg-purple-100 border rounded-lg p-3 block">
-
-<p class="font-medium text-purple-700">
-<%= book.title %>
-</p>
-
-<p class="text-xs text-gray-500">
-Open Book
-</p>
-
-</a>
-
-<% }) %>
-
-</div>
-
-<% } else { %>
-
-<p class="text-gray-400 text-sm">No books added</p>
-
-<% } %>
-
-</div>
-
-
-
-<!-- PYQs -->
-
-<div class="mb-6">
-
-<h3 class="font-semibold text-gray-800 mb-2">
-Previous Year Questions
-</h3>
-
-<% if(unit.pyqs && unit.pyqs.length > 0) { %>
-
-<div class="grid md:grid-cols-2 gap-3">
-
-<% unit.pyqs.forEach(pyq => { %>
-
-<a href="<%= pyq.link %>"
-target="_blank"
-class="bg-green-50 hover:bg-green-100 border rounded-lg p-3 block">
-
-<p class="font-medium text-green-700">
-<%= pyq.title %>
-</p>
-
-<p class="text-xs text-gray-500">
-Open PYQ
-</p>
-
-</a>
-
-<% }) %>
-
-</div>
-
-<% } else { %>
-
-<p class="text-gray-400 text-sm">No PYQs added</p>
-
-<% } %>
-
-</div>
-
-
-
-<!-- YOUTUBE -->
-
-<div>
-
-<h3 class="font-semibold text-gray-800 mb-2">
-YouTube Lectures
-</h3>
-
-<% if(unit.youtubeLinks && unit.youtubeLinks.length > 0) { %>
-
-<div class="grid md:grid-cols-2 gap-3">
-
-<% unit.youtubeLinks.forEach(video => { %>
-
-<a href="<%= video.link %>"
-target="_blank"
-class="bg-red-50 hover:bg-red-100 border rounded-lg p-3 block">
-
-<p class="font-medium text-red-600">
-<%= video.title %>
-</p>
-
-<p class="text-xs text-gray-500">
-Watch Lecture
-</p>
-
-</a>
-
-<% }) %>
-
-</div>
-
-<% } else { %>
-
-<p class="text-gray-400 text-sm">No videos added</p>
-
-<% } %>
-
-</div>
-
-
-</div>
-
-<% }) %>
-
-</div>
-
-<% } else { %>
-
-<div class="bg-white rounded-xl shadow p-8 text-center">
-
-<p class="text-gray-500">
-No units have been added for this subject yet.
-</p>
-
-</div>
-
-<% } %>
-
-
-</div>
-
+<body class="min-h-screen">
+
+    <%- include("partials/navbar-user") %>
+
+    <div class="max-w-7xl mx-auto px-6 pt-32 pb-20">
+
+        <div class="mb-12 border-b border-gray-100 pb-12" data-aos="fade-up">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="bg-blue-600 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-widest">Core Module</span>
+                        <span class="text-xs font-bold text-gray-400">Semester <%= subject.semester %></span>
+                    </div>
+                    <h1 class="text-5xl font-black tracking-tighter text-[#1a1a1a] italic leading-none">
+                        <%= subject.name %>
+                    </h1>
+                    <p class="text-gray-500 mt-4 font-medium italic">
+                        Vault Directory: <span class="text-black font-bold">RIT / <%= subject.branch %></span>
+                    </p>
+                </div>
+                
+                <a href="/progress/<%= subject._id %>" 
+                   class="bg-[#0a0a0a] text-white px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-2xl shadow-gray-200 active:scale-95 flex items-center gap-3">
+                   <span>📊</span> Track Mastery
+                </a>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-12">
+            
+            <div class="hidden lg:block lg:col-span-3">
+                <div class="sticky-side">
+                    <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-6 px-4">Vault Navigation</h3>
+                    <div class="space-y-1">
+                        <% if(subject.units && subject.units.length > 0) { %>
+                            <% subject.units.forEach((unit) => { %>
+                                <a href="#unit-<%= unit.unitNumber %>" class="sidebar-link block px-4 py-3 rounded-xl text-sm font-bold text-gray-600 hover:text-black">
+                                    Unit <%= unit.unitNumber %>
+                                </a>
+                            <% }) %>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-9 space-y-20">
+                
+                <% if(subject.units && subject.units.length > 0) { %>
+                    <% subject.units.forEach((unit) => { %>
+                        <section id="unit-<%= unit.unitNumber %>" class="scroll-mt-32" data-aos="fade-up">
+                            <div class="flex items-center gap-4 mb-8">
+                                <span class="h-10 w-10 bg-black text-white rounded-xl flex items-center justify-center font-black italic text-lg shadow-lg">
+                                    <%= unit.unitNumber %>
+                                </span>
+                                <h2 class="text-3xl font-black tracking-tighter text-[#1a1a1a]">
+                                    <%= unit.unitTitle %>
+                                </h2>
+                            </div>
+
+                            <div class="flex flex-wrap gap-2 mb-10">
+                                <% if(unit.topics && unit.topics.length > 0) { %>
+                                    <% unit.topics.forEach(topic => { %>
+                                        <span class="bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tight">
+                                            <%= topic.title %>
+                                        </span>
+                                    <% }) %>
+                                <% } %>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                
+                                <div class="space-y-6">
+                                    <div>
+                                        <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-4">Reading Materials</p>
+                                        <div class="space-y-3">
+                                            <% if(unit.notes && unit.notes.length > 0) { %>
+                                                <% unit.notes.forEach(note => { %>
+                                                    <a href="<%= note.link %>" target="_blank" class="resource-btn notion-card p-4 rounded-2xl flex items-center justify-between group">
+                                                        <div class="flex items-center gap-3">
+                                                            <span class="text-xl">📄</span>
+                                                            <span class="text-sm font-bold text-gray-700 group-hover:text-black"><%= note.title %></span>
+                                                        </div>
+                                                        <span class="text-[9px] font-black text-blue-500 uppercase">Notes</span>
+                                                    </a>
+                                                <% }) %>
+                                            <% } %>
+                                            <% if(unit.books && unit.books.length > 0) { %>
+                                                <% unit.books.forEach(book => { %>
+                                                    <a href="<%= book.link %>" target="_blank" class="resource-btn notion-card p-4 rounded-2xl flex items-center justify-between group">
+                                                        <div class="flex items-center gap-3">
+                                                            <span class="text-xl">📖</span>
+                                                            <span class="text-sm font-bold text-gray-700 group-hover:text-black"><%= book.title %></span>
+                                                        </div>
+                                                        <span class="text-[9px] font-black text-purple-500 uppercase">Book</span>
+                                                    </a>
+                                                <% }) %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-4">Exam Prep</p>
+                                        <div class="space-y-3">
+                                            <% if(unit.pyqs && unit.pyqs.length > 0) { %>
+                                                <% unit.pyqs.forEach(pyq => { %>
+                                                    <a href="<%= pyq.link %>" target="_blank" class="resource-btn notion-card p-4 rounded-2xl flex items-center justify-between group">
+                                                        <div class="flex items-center gap-3">
+                                                            <span class="text-xl">🎯</span>
+                                                            <span class="text-sm font-bold text-gray-700 group-hover:text-black"><%= pyq.title %></span>
+                                                        </div>
+                                                        <span class="text-[9px] font-black text-green-500 uppercase">PYQ</span>
+                                                    </a>
+                                                <% }) %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-4">Video Archive</p>
+                                    <div class="space-y-6">
+                                        <% if(unit.youtubeLinks && unit.youtubeLinks.length > 0) { %>
+                                            <% unit.youtubeLinks.forEach(video => { %>
+                                                <div class="space-y-3">
+                                                    <p class="text-xs font-bold text-gray-600 italic">"<%= video.title %>"</p>
+                                                    <div class="video-wrapper shadow-2xl shadow-gray-200">
+                                                        <iframe 
+                                                            src="<%= video.link.replace('watch?v=','embed/') %>" 
+                                                            title="YouTube video" 
+                                                            allowfullscreen
+                                                            loading="lazy"
+                                                        ></iframe>
+                                                    </div>
+                                                </div>
+                                            <% }) %>
+                                        <% } else { %>
+                                            <div class="notion-card p-12 rounded-[2rem] text-center border-dashed">
+                                                <p class="text-xs text-gray-400 italic">No video lectures synchronized for this unit.</p>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </section>
+                        <div class="h-[1px] w-full bg-gray-100"></div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="notion-card p-24 rounded-[3rem] text-center" data-aos="zoom-in">
+                        <p class="text-gray-400 font-bold italic text-lg">No curriculum data discovered in this vault yet.</p>
+                    </div>
+                <% } %>
+
+            </div>
+        </div>
+    </div>
+
+    <%- include("partials/footer-user") %>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+    </script>
 </body>
+
 </html>

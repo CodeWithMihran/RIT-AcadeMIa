@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Subject | RIT AcadeMIA Console</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -17,22 +17,26 @@
             background-color: #fbfbfa;
             scroll-behavior: smooth;
         }
+
         .notion-input {
             border: 1px solid #e5e7eb;
             background: white;
             transition: all 0.2s ease;
         }
+
         .notion-input:focus {
             border-color: #3b82f6;
             outline: none;
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.05);
         }
+
         .unit-editor-card {
             background: white;
             border: 1px solid #e5e7eb;
             border-left: 4px solid #3b82f6;
             transition: all 0.3s ease;
         }
+
         .section-label {
             font-size: 10px;
             font-weight: 800;
@@ -48,7 +52,7 @@
     <%- include("partials/navbar-admin") %>
 
     <div class="max-w-6xl mx-auto px-6 pt-32 pb-20">
-        
+
         <div class="mb-12 border-b border-gray-100 pb-10" data-aos="fade-up">
             <div class="flex items-center gap-4 mb-4">
                 <a href="/admin" class="text-xs font-bold text-gray-400 hover:text-black transition-colors uppercase tracking-widest">← Back to Console</a>
@@ -72,7 +76,7 @@
         <% } %>
 
         <form action="/subjects/edit/<%= subject._id %>" method="POST" class="space-y-12" data-aos="fade-up">
-            
+
             <div class="bg-white border border-gray-200 rounded-[2.5rem] p-8 md:p-10 shadow-sm">
                 <h2 class="section-label mb-8">Base Configuration</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -99,15 +103,21 @@
                 <div class="h-[1px] flex-grow bg-gray-100"></div>
             </div>
 
-            <div class="space-y-10">
+            <div id="unitsContainer" class="space-y-10">
                 <% if(subject.units && subject.units.length > 0){ %>
                     <% subject.units.forEach((unit, uIndex) => { %>
-                        <div class="unit-editor-card rounded-[2.5rem] p-8 md:p-12 shadow-sm space-y-10">
+                        <div class="unit-editor-card rounded-[2.5rem] p-8 md:p-12 shadow-sm space-y-10 transition-all duration-300">
                             
                             <div class="flex justify-between items-center border-b border-gray-50 pb-6">
-                                <h3 class="text-2xl font-black italic tracking-tighter">Unit 0<%= unit.unitNumber %></h3>
-                                <input type="hidden" name="units[<%= uIndex %>][unitNumber]" value="<%= unit.unitNumber %>">
-                                <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Active Module</span>
+                                <h3 class="text-2xl font-black italic tracking-tighter unit-title">Unit 0<%= unit.unitNumber %></h3>
+                                <div class="flex items-center gap-4">
+                                    <button type="button" onclick="removeUnit(this)" 
+                                        class="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors py-2 px-4 border border-gray-100 rounded-xl hover:border-red-100 hover:bg-red-50">
+                                        ✕ Remove Unit
+                                    </button>
+                                    <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Active Module</span>
+                                </div>
+                                <input type="hidden" class="unit-number-hidden" name="units[<%= uIndex %>][unitNumber]" value="<%= unit.unitNumber %>">
                             </div>
 
                             <div class="grid md:grid-cols-2 gap-8">
@@ -125,7 +135,6 @@
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                
                                 <div class="p-6 bg-blue-50/30 rounded-3xl border border-blue-100/50 space-y-4">
                                     <p class="section-label text-blue-600">Study Notes</p>
                                     <% if(unit.notes){ unit.notes.forEach((note, nIndex) => { %>
@@ -173,7 +182,6 @@
                                         </div>
                                     <% }) } %>
                                 </div>
-
                             </div>
                         </div>
                     <% }) %>
@@ -196,6 +204,47 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({ duration: 800, once: true });
+
+        function removeUnit(button) {
+            const card = button.closest(".unit-editor-card");
+            
+            // Visual feedback before removal
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                card.remove();
+                renumberUnits();
+            }, 300);
+        }
+
+        function renumberUnits() {
+            const units = document.querySelectorAll(".unit-editor-card");
+            
+            units.forEach((unit, index) => {
+                // Update Visual Title (e.g., Unit 01, Unit 02)
+                const title = unit.querySelector(".unit-title");
+                if (title) title.innerText = `Unit 0${index + 1}`;
+
+                // Update Hidden Input Value
+                const hiddenInput = unit.querySelector(".unit-number-hidden");
+                if (hiddenInput) {
+                    hiddenInput.name = `units[${index}][unitNumber]`;
+                    hiddenInput.value = index + 1;
+                }
+
+                // Update name attributes for all inputs within this unit to keep array sequential
+                const inputs = unit.querySelectorAll("input");
+                inputs.forEach(input => {
+                    const currentName = input.getAttribute("name");
+                    if (currentName) {
+                        // Regex replaces the index inside 'units[x]' with the new index
+                        const newName = currentName.replace(/units\[\d+\]/, `units[${index}]`);
+                        input.setAttribute("name", newName);
+                    }
+                });
+            });
+        }
     </script>
 </body>
 </html>
