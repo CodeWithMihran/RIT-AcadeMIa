@@ -194,17 +194,35 @@
                 <p class="text-gray-500 mb-8 text-lg">Join the hundreds of RIT students who have simplified their learning workflow.</p>
                 
                 <form action="/auth/register" method="POST" class="space-y-4">
-                    <input type="text" name="name" placeholder="Full name" required class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-50 outline-none transition-all">
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="text" name="branch" placeholder="Branch (e.g. CSE)" required class="px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500">
-                        <input type="number" name="year" placeholder="Year" required class="px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500">
-                    </div>
-                    <input type="email" name="email" placeholder="Institutional email" required class="w-full px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500">
-                    <input type="password" name="password" placeholder="Create password" required class="w-full px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500">
+                    <input type="text" name="name" placeholder="Full name" required 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-50 outline-none transition-all">
                     
-                    <button class="w-full bg-[#1a1a1a] text-white py-4 rounded-xl font-bold hover:bg-black transition-all shadow-lg hover:shadow-xl mt-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <input type="text" name="branch" placeholder="Branch (e.g. CSE)" required 
+                            class="px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500 transition-all">
+                        
+                        <input type="number" id="registerYear" name="year" placeholder="Year" min="1" max="4" required 
+                            class="px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500 transition-all">
+                        
+                        <select id="registerSemester" name="semester" required 
+                            class="px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500 bg-white text-gray-500 transition-all">
+                            <option value="" disabled selected>Semester</option>
+                            </select>
+                    </div>
+
+                    <input type="email" name="email" placeholder="Institutional email" required 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500 transition-all">
+                    
+                    <input type="password" name="password" placeholder="Create password" required 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500 transition-all">
+                    
+                    <button class="w-full bg-[#1a1a1a] text-white py-4 rounded-xl font-bold hover:bg-black transition-all shadow-lg hover:shadow-xl mt-4 active:scale-[0.98]">
                         Create My Account
                     </button>
+                    
+                    <p class="text-[10px] text-gray-400 text-center uppercase tracking-widest mt-4">
+                        By registering, you agree to the RIT AcadeMIA Academic Guidelines.
+                    </p>
                 </form>
             </div>
 
@@ -215,13 +233,15 @@
                 <form action="/auth/login" method="POST" class="space-y-5">
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">Email Address</label>
-                        <input type="email" name="email" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-transparent focus:bg-white focus:border-gray-200 outline-none transition-all">
+                        <input type="email" name="email" required 
+                            class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-transparent focus:bg-white focus:border-gray-200 outline-none transition-all">
                     </div>
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">Password</label>
-                        <input type="password" name="password" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-transparent focus:bg-white focus:border-gray-200 outline-none transition-all">
+                        <input type="password" name="password" required 
+                            class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-transparent focus:bg-white focus:border-gray-200 outline-none transition-all">
                     </div>
-                    <button class="w-full border-2 border-[#1a1a1a] text-[#1a1a1a] py-3 rounded-xl font-bold hover:bg-[#1a1a1a] hover:text-white transition-all">
+                    <button class="w-full border-2 border-[#1a1a1a] text-[#1a1a1a] py-3 rounded-xl font-bold hover:bg-[#1a1a1a] hover:text-white transition-all active:scale-[0.98]">
                         Login to Dashboard
                     </button>
                 </form>
@@ -238,6 +258,34 @@
             duration: 800,
             once: true,
             easing: 'ease-out-quad'
+        });
+
+        // Dynamic Semester Selection Logic
+        const yearInput = document.getElementById('registerYear');
+        const semSelect = document.getElementById('registerSemester');
+
+        yearInput.addEventListener('input', function() {
+            const year = parseInt(this.value);
+            
+            // Clear current options
+            semSelect.innerHTML = '<option value="" disabled selected>Semester</option>';
+            
+            if (year >= 1 && year <= 4) {
+                // Determine sem based on year (e.g., Year 1 -> Sem 1, 2)
+                const sem1 = (year * 2) - 1;
+                const sem2 = year * 2;
+
+                const option1 = document.createElement('option');
+                option1.value = sem1;
+                option1.textContent = 'Sem ' + sem1;
+                
+                const option2 = document.createElement('option');
+                option2.value = sem2;
+                option2.textContent = 'Sem ' + sem2;
+
+                semSelect.appendChild(option1);
+                semSelect.appendChild(option2);
+            }
         });
     </script>
 

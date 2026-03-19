@@ -105,7 +105,7 @@
                         <span class="text-blue-500">✦</span> Edit Information
                     </h3>
 
-                    <form action="/users/profile/update" method="POST" class="space-y-8">
+                    <form action="/profile/update" method="POST" class="space-y-8">
                         
                         <div class="grid md:grid-cols-2 gap-6">
                             <div class="space-y-2">
@@ -128,13 +128,15 @@
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Year</label>
-                                <input type="number" name="year" value="<%= user.year %>" required 
+                                <input type="number" id="yearInput" name="year" value="<%= user.year %>" min="1" max="4" required 
                                     class="notion-input w-full px-4 py-3 rounded-xl focus:ring-0 text-sm font-medium">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Semester</label>
-                                <input type="number" name="semester" value="<%= user.semester %>" required 
-                                    class="notion-input w-full px-4 py-3 rounded-xl focus:ring-0 text-sm font-medium">
+                                <select id="semSelect" name="semester" required 
+                                    class="notion-input w-full px-4 py-3 rounded-xl focus:ring-0 text-sm font-medium bg-white">
+                                    <option value="<%= user.semester %>" selected>Sem <%= user.semester %></option>
+                                    </select>
                             </div>
                         </div>
 
@@ -154,6 +156,44 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({ duration: 800, once: true });
+
+        // Logic for Dynamic Semester Dropdown
+        const yearInput = document.getElementById('yearInput');
+        const semSelect = document.getElementById('semSelect');
+        const initialSemester = "<%= user.semester %>";
+
+        function updateSemesterOptions(year, selectedSem) {
+            const val = parseInt(year);
+            semSelect.innerHTML = '';
+            
+            if (val >= 1 && val <= 4) {
+                const startSem = (val * 2) - 1;
+                const endSem = val * 2;
+
+                for (let i = startSem; i <= endSem; i++) {
+                    const opt = document.createElement('option');
+                    opt.value = i;
+                    opt.textContent = 'Sem ' + i;
+                    if (i == selectedSem) opt.selected = true;
+                    semSelect.appendChild(opt);
+                }
+            } else {
+                const opt = document.createElement('option');
+                opt.textContent = 'Enter valid year';
+                opt.disabled = true;
+                semSelect.appendChild(opt);
+            }
+        }
+
+        // Listen for changes
+        yearInput.addEventListener('input', function() {
+            updateSemesterOptions(this.value, null);
+        });
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateSemesterOptions(yearInput.value, initialSemester);
+        });
     </script>
 </body>
 
