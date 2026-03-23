@@ -7,7 +7,7 @@
     <title>RIT AcadeMIA | Your Academic OS</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
@@ -36,6 +36,39 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        
+        /* AUTHENTIC NOTION VIDEO CANVAS STYLING */
+        .notion-video-canvas {
+            position: relative;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 4px;
+            /* Multi-layered soft shadow like Notion/Linear */
+            box-shadow: 
+                0 0 0 1px rgba(0,0,0,0.02),
+                0 2px 4px rgba(0,0,0,0.02),
+                0 12px 24px rgba(0,0,0,0.06);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .notion-video-canvas:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 0 0 1px rgba(0,0,0,0.02),
+                0 4px 8px rgba(0,0,0,0.04),
+                0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .video-inner-frame {
+            border-radius: 8px;
+            overflow: hidden;
+            display: block;
+            line-height: 0;
+            background: #f7f6f3;
+            aspect-ratio: 16 / 10;
+        }
+
         /* Custom Scrollbar like Notion */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
@@ -48,26 +81,50 @@
 <body class="bg-white overflow-x-hidden">
 
     <section id="home" class="pt-32 pb-20">
-        <div class="max-w-5xl mx-auto px-6 text-center">
-            <div data-aos="fade-up">
-                <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-[#1a1a1a] leading-[1.1]">
-                    Your entire semester, <br> <span class="gradient-text">organized in one place.</span>
-                </h1>
-                <p class="text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-                    RIT AcadeMIa is the central nervous system for your studies. Stop chasing PDFs and YouTube links—start mastering your subjects with a structured ecosystem.
-                </p>
-                <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="#auth" class="bg-[#2383e2] text-white px-8 py-3.5 rounded-md font-medium hover:bg-[#0070e0] transition-all shadow-sm">
-                        Start Your Journey — Free
-                    </a>
-                    <a href="#features" class="text-gray-600 px-8 py-3.5 rounded-md font-medium hover:bg-gray-100 transition-all border border-transparent hover:border-gray-200">
-                        Explore Features
-                    </a>
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                
+                <div class="text-left" data-aos="fade-up">
+                    <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-[#1a1a1a] leading-[1.1]">
+                        Your entire semester, <br> <span class="gradient-text">organized in one place.</span>
+                    </h1>
+                    <p class="text-xl text-gray-500 max-w-xl mb-10 leading-relaxed">
+                        RIT AcadeMIa is the central nervous system for your studies. Stop chasing PDFs and YouTube links—start mastering your subjects with a structured ecosystem.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                        <a href="#auth" class="bg-[#2383e2] text-white px-8 py-3.5 rounded-md font-medium hover:bg-[#0070e0] transition-all shadow-sm text-center">
+                            Start Your Journey — Free
+                        </a>
+                        <a href="#features" class="text-gray-600 px-8 py-3.5 rounded-md font-medium hover:bg-gray-100 transition-all border border-transparent hover:border-gray-200 text-center">
+                            Explore Features
+                        </a>
+                    </div>
                 </div>
+
+                <div class="w-full" data-aos="fade-left" data-aos-delay="200">
+                    <div class="notion-video-canvas">
+                        <div class="video-inner-frame">
+                            <video 
+                                class="w-full h-full object-cover" 
+                                autoplay 
+                                muted 
+                                loop 
+                                playsinline
+                                preload="auto">
+                                <source src="/videos/rit-demo.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-center text-[11px] font-medium text-gray-400 uppercase tracking-widest">
+                        Interactive Demo: RIT AcadeMIA Terminal v1.0
+                    </p>
+                </div>
+
             </div>
 
-            <div class="mt-20 border-t border-gray-100 pt-12" data-aos="fade-up" data-aos-delay="200">
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] mb-8">Integrated Academic Resources</p>
+            <div class="mt-32 border-t border-gray-100 pt-12" data-aos="fade-up" data-aos-delay="200">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] mb-8 text-center">Integrated Academic Resources</p>
                 <div class="flex flex-wrap justify-center gap-8 md:gap-16 opacity-50 grayscale font-semibold text-lg italic">
                     <span>Video Lectures</span>
                     <span>Handwritten Notes</span>
@@ -207,7 +264,7 @@
                         <select id="registerSemester" name="semester" required 
                             class="px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500 bg-white text-gray-500 transition-all">
                             <option value="" disabled selected>Semester</option>
-                            </select>
+                        </select>
                     </div>
 
                     <input type="email" name="email" placeholder="Institutional email" required 
@@ -266,23 +323,16 @@
 
         yearInput.addEventListener('input', function() {
             const year = parseInt(this.value);
-            
-            // Clear current options
             semSelect.innerHTML = '<option value="" disabled selected>Semester</option>';
-            
             if (year >= 1 && year <= 4) {
-                // Determine sem based on year (e.g., Year 1 -> Sem 1, 2)
                 const sem1 = (year * 2) - 1;
                 const sem2 = year * 2;
-
                 const option1 = document.createElement('option');
                 option1.value = sem1;
                 option1.textContent = 'Sem ' + sem1;
-                
                 const option2 = document.createElement('option');
                 option2.value = sem2;
                 option2.textContent = 'Sem ' + sem2;
-
                 semSelect.appendChild(option1);
                 semSelect.appendChild(option2);
             }
