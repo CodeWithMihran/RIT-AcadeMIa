@@ -20,3 +20,9 @@ router.post("/login", (req, res, next) => {
 router.get("/logout", authController.logoutUser);
 
 module.exports = router;
+
+router.post("/login", (req, res, next) => {
+    req.flash("error", "System Test Message");
+    console.log("Flash set successfully");
+    next();
+}, authController.loginUser);

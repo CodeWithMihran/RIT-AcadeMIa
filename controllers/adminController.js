@@ -26,10 +26,20 @@ module.exports.viewUsers = async (req, res) => {
 module.exports.deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
+        
+        // Safety: Don't let an admin delete themselves by accident
+        if (id === req.user._id.toString()) {
+            req.flash("error", "Security Alert: You cannot delete your own account.");
+            return res.redirect("/admin/users");
+        }
+
         await userModel.findByIdAndDelete(id);
-        req.flash("success", "User deleted successfully");
-        res.redirect("/admin/users");
+        
+        req.flash("success", "User record purged successfully.");
+        // Ensure this redirect matches the route that shows users
+        res.redirect("/admin/users"); 
     } catch (err) {
-        res.send(err.message);
+        req.flash("error", "Database Error: " + err.message);
+        res.redirect("/admin/users");
     }
 };

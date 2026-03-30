@@ -11,7 +11,7 @@ router.get("/", isLoggedIn, checkRole(["admin"]), adminController.showAdminDashb
 router.get("/users", isLoggedIn, checkRole(["admin"]), adminController.viewUsers);
 
 // Delete user
-router.post("/users/delete/:id", isLoggedIn, checkRole(["admin"]), adminController.deleteUser);
+router.get("/delete-user/:id", isLoggedIn, checkRole(["admin"]), adminController.deleteUser);
 
 // Admin manage subjects (optional)
 // router.get("/subjects", isLoggedIn, checkRole(["admin"]), (req, res) => {

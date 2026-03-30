@@ -63,13 +63,13 @@
             <p class="text-gray-500 mt-2 font-medium">Modifying resources for: <span class="text-black font-bold underline underline-offset-4"><%= subject.name %></span></p>
         </div>
 
-        <% if (error.length > 0) { %>
+        <% if (error && error.length > 0) { %>
             <div class="bg-red-50 border border-red-100 text-red-600 px-5 py-4 rounded-2xl mb-8 text-sm font-bold flex items-center gap-3">
                 <span>⚠️</span> <%= error %>
             </div>
         <% } %>
 
-        <% if (success.length > 0) { %>
+        <% if (success && success.length > 0) { %>
             <div class="bg-green-50 border border-green-100 text-green-600 px-5 py-4 rounded-2xl mb-8 text-sm font-bold flex items-center gap-3">
                 <span>✅</span> <%= success %>
             </div>
@@ -124,74 +124,70 @@
                                 <div class="space-y-2">
                                     <label class="section-label text-gray-600">Module Title</label>
                                     <input name="units[<%= uIndex %>][unitTitle]" value="<%= unit.unitTitle %>"
-                                        class="notion-input w-full px-4 py-3 rounded-xl text-sm font-medium">
+                                        class="notion-input w-full px-4 py-3 rounded-xl text-sm font-medium" placeholder="Unit Title">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="section-label text-gray-600">Topic Index</label>
                                     <input name="units[<%= uIndex %>][topics]" 
                                         value="<%= unit.topics ? unit.topics.map(t => t.title).join(', ') : '' %>"
-                                        class="notion-input w-full px-4 py-3 rounded-xl text-sm font-medium">
+                                        class="notion-input w-full px-4 py-3 rounded-xl text-sm font-medium" placeholder="Topic 1, Topic 2...">
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="p-6 bg-blue-50/30 rounded-3xl border border-blue-100/50 space-y-4">
                                     <p class="section-label text-blue-600">Study Notes</p>
-                                    <% if(unit.notes){ unit.notes.forEach((note, nIndex) => { %>
-                                        <div class="space-y-2">
-                                            <input name="units[<%= uIndex %>][notes][<%= nIndex %>][title]" value="<%= note.title %>"
-                                                class="notion-input w-full px-3 py-2 rounded-lg text-xs font-bold" placeholder="Title">
-                                            <input name="units[<%= uIndex %>][notes][<%= nIndex %>][link]" value="<%= note.link %>"
-                                                class="notion-input w-full px-3 py-2 rounded-lg text-xs" placeholder="URL">
-                                        </div>
-                                    <% }) } %>
+                                    <div class="space-y-2">
+                                        <input name="units[<%= uIndex %>][notes][0][title]" value="<%= (unit.notes && unit.notes[0]) ? unit.notes[0].title : '' %>"
+                                            class="notion-input w-full px-3 py-2 rounded-lg text-xs font-bold" placeholder="Title">
+                                        <input name="units[<%= uIndex %>][notes][0][link]" value="<%= (unit.notes && unit.notes[0]) ? unit.notes[0].link : '' %>"
+                                            class="notion-input w-full px-3 py-2 rounded-lg text-xs" placeholder="URL">
+                                    </div>
                                 </div>
 
                                 <div class="p-6 bg-purple-50/30 rounded-3xl border border-purple-100/50 space-y-4">
                                     <p class="section-label text-purple-600">Reference Books</p>
-                                    <% if(unit.books){ unit.books.forEach((book, bIndex) => { %>
-                                        <div class="space-y-2">
-                                            <input name="units[<%= uIndex %>][books][<%= bIndex %>][title]" value="<%= book.title %>"
-                                                class="notion-input w-full px-3 py-2 rounded-lg text-xs font-bold">
-                                            <input name="units[<%= uIndex %>][books][<%= bIndex %>][link]" value="<%= book.link %>"
-                                                class="notion-input w-full px-3 py-2 rounded-lg text-xs">
-                                        </div>
-                                    <% }) } %>
+                                    <div class="space-y-2">
+                                        <input name="units[<%= uIndex %>][books][0][title]" value="<%= (unit.books && unit.books[0]) ? unit.books[0].title : '' %>"
+                                            class="notion-input w-full px-3 py-2 rounded-lg text-xs font-bold" placeholder="Title">
+                                        <input name="units[<%= uIndex %>][books][0][link]" value="<%= (unit.books && unit.books[0]) ? unit.books[0].link : '' %>"
+                                            class="notion-input w-full px-3 py-2 rounded-lg text-xs" placeholder="URL">
+                                    </div>
                                 </div>
 
                                 <div class="p-6 bg-red-50/30 rounded-3xl border border-red-100/50 space-y-4">
                                     <p class="section-label text-red-600">University PYQs</p>
-                                    <% if(unit.pyqs){ unit.pyqs.forEach((pyq, pIndex) => { %>
-                                        <div class="space-y-2">
-                                            <input name="units[<%= uIndex %>][pyqs][<%= pIndex %>][title]" value="<%= pyq.title %>"
-                                                class="notion-input w-full px-3 py-2 rounded-lg text-xs font-bold">
-                                            <input name="units[<%= uIndex %>][pyqs][<%= pIndex %>][link]" value="<%= pyq.link %>"
-                                                class="notion-input w-full px-3 py-2 rounded-lg text-xs">
-                                        </div>
-                                    <% }) } %>
+                                    <div class="space-y-2">
+                                        <input name="units[<%= uIndex %>][pyqs][0][title]" value="<%= (unit.pyqs && unit.pyqs[0]) ? unit.pyqs[0].title : '' %>"
+                                            class="notion-input w-full px-3 py-2 rounded-lg text-xs font-bold" placeholder="Title">
+                                        <input name="units[<%= uIndex %>][pyqs][0][link]" value="<%= (unit.pyqs && unit.pyqs[0]) ? unit.pyqs[0].link : '' %>"
+                                            class="notion-input w-full px-3 py-2 rounded-lg text-xs" placeholder="URL">
+                                    </div>
                                 </div>
 
                                 <div class="p-6 bg-gray-900 rounded-3xl space-y-4">
                                     <p class="section-label text-red-500">Video Tutorials</p>
-                                    <% if(unit.youtubeLinks){ unit.youtubeLinks.forEach((video, vIndex) => { %>
-                                        <div class="space-y-2">
-                                            <input name="units[<%= uIndex %>][youtubeLinks][<%= vIndex %>][title]" value="<%= video.title %>"
-                                                class="notion-input !bg-white/5 !border-white/10 !text-white w-full px-3 py-2 rounded-lg text-xs font-bold">
-                                            <input name="units[<%= uIndex %>][youtubeLinks][<%= vIndex %>][link]" value="<%= video.link %>"
-                                                class="notion-input !bg-white/5 !border-white/10 !text-blue-400 w-full px-3 py-2 rounded-lg text-xs">
-                                        </div>
-                                    <% }) } %>
+                                    <div class="space-y-2">
+                                        <input name="units[<%= uIndex %>][youtubeLinks][0][title]" value="<%= (unit.youtubeLinks && unit.youtubeLinks[0]) ? unit.youtubeLinks[0].title : '' %>"
+                                            class="notion-input !bg-white/5 !border-white/10 !text-white w-full px-3 py-2 rounded-lg text-xs font-bold" placeholder="Title">
+                                        <input name="units[<%= uIndex %>][youtubeLinks][0][link]" value="<%= (unit.youtubeLinks && unit.youtubeLinks[0]) ? unit.youtubeLinks[0].link : '' %>"
+                                            class="notion-input !bg-white/5 !border-white/10 !text-blue-400 w-full px-3 py-2 rounded-lg text-xs" placeholder="URL">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     <% }) %>
-                <% } else { %>
-                    <div class="notion-card p-12 rounded-[2rem] text-center italic text-gray-400">No units detected for this entity.</div>
                 <% } %>
             </div>
 
-            <div class="pt-10 flex justify-center">
-                <button class="bg-[#0a0a0a] text-white px-12 py-5 rounded-[2rem] font-black uppercase tracking-[0.3em] text-xs hover:bg-blue-600 transition-all shadow-2xl shadow-gray-300 active:scale-95">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-10">
+                <button type="button" onclick="addUnit()" 
+                    class="flex items-center gap-3 bg-white border-2 border-dashed border-gray-200 text-gray-500 px-8 py-4 rounded-2xl font-bold hover:border-blue-500 hover:text-blue-500 transition-all w-full md:w-auto">
+                    <span class="text-xl">+</span>
+                    <span>Append New Unit</span>
+                </button>
+
+                <button class="bg-[#0a0a0a] text-white px-12 py-5 rounded-[2rem] font-black uppercase tracking-[0.3em] text-xs hover:bg-blue-600 transition-all shadow-2xl shadow-gray-300 active:scale-95 w-full md:w-auto">
                     Commit Changes to Vault
                 </button>
             </div>
@@ -205,13 +201,77 @@
     <script>
         AOS.init({ duration: 800, once: true });
 
+        function addUnit() {
+            const container = document.getElementById("unitsContainer");
+            const currentUnitsCount = document.querySelectorAll(".unit-editor-card").length;
+            
+            const unitHTML = `
+                <div class="unit-editor-card rounded-[2.5rem] p-8 md:p-12 shadow-sm space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div class="flex justify-between items-center border-b border-gray-50 pb-6">
+                        <h3 class="text-2xl font-black italic tracking-tighter unit-title">Unit 0${currentUnitsCount + 1}</h3>
+                        <div class="flex items-center gap-4">
+                            <button type="button" onclick="removeUnit(this)" 
+                                class="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors py-2 px-4 border border-gray-100 rounded-xl hover:border-red-100 hover:bg-red-50">
+                                ✕ Remove Unit
+                            </button>
+                            <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">New Module</span>
+                        </div>
+                        <input type="hidden" class="unit-number-hidden" name="units[${currentUnitsCount}][unitNumber]" value="${currentUnitsCount + 1}">
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-2">
+                            <label class="section-label text-gray-600">Module Title</label>
+                            <input name="units[${currentUnitsCount}][unitTitle]" class="notion-input w-full px-4 py-3 rounded-xl text-sm font-medium" placeholder="Unit Title">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="section-label text-gray-600">Topic Index</label>
+                            <input name="units[${currentUnitsCount}][topics]" class="notion-input w-full px-4 py-3 rounded-xl text-sm font-medium" placeholder="Topic 1, Topic 2...">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-6 bg-blue-50/30 rounded-3xl border border-blue-100/50 space-y-4">
+                            <p class="section-label text-blue-600">Study Notes</p>
+                            <div class="space-y-2">
+                                <input name="units[${currentUnitsCount}][notes][0][title]" class="notion-input w-full px-3 py-2 rounded-lg text-xs font-bold" placeholder="Title">
+                                <input name="units[${currentUnitsCount}][notes][0][link]" class="notion-input w-full px-3 py-2 rounded-lg text-xs" placeholder="URL">
+                            </div>
+                        </div>
+
+                        <div class="p-6 bg-purple-50/30 rounded-3xl border border-purple-100/50 space-y-4">
+                            <p class="section-label text-purple-600">Reference Books</p>
+                            <div class="space-y-2">
+                                <input name="units[${currentUnitsCount}][books][0][title]" class="notion-input w-full px-3 py-2 rounded-lg text-xs font-bold" placeholder="Title">
+                                <input name="units[${currentUnitsCount}][books][0][link]" class="notion-input w-full px-3 py-2 rounded-lg text-xs" placeholder="URL">
+                            </div>
+                        </div>
+
+                        <div class="p-6 bg-red-50/30 rounded-3xl border border-red-100/50 space-y-4">
+                            <p class="section-label text-red-600">University PYQs</p>
+                            <div class="space-y-2">
+                                <input name="units[${currentUnitsCount}][pyqs][0][title]" class="notion-input w-full px-3 py-2 rounded-lg text-xs font-bold" placeholder="Title">
+                                <input name="units[${currentUnitsCount}][pyqs][0][link]" class="notion-input w-full px-3 py-2 rounded-lg text-xs" placeholder="URL">
+                            </div>
+                        </div>
+
+                        <div class="p-6 bg-gray-900 rounded-3xl space-y-4">
+                            <p class="section-label text-red-500">Video Tutorials</p>
+                            <div class="space-y-2">
+                                <input name="units[${currentUnitsCount}][youtubeLinks][0][title]" class="notion-input !bg-white/5 !border-white/10 !text-white w-full px-3 py-2 rounded-lg text-xs font-bold" placeholder="Title">
+                                <input name="units[${currentUnitsCount}][youtubeLinks][0][link]" class="notion-input !bg-white/5 !border-white/10 !text-blue-400 w-full px-3 py-2 rounded-lg text-xs" placeholder="URL">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML("beforeend", unitHTML);
+        }
+
         function removeUnit(button) {
             const card = button.closest(".unit-editor-card");
-            
-            // Visual feedback before removal
             card.style.opacity = '0';
             card.style.transform = 'scale(0.95)';
-            
             setTimeout(() => {
                 card.remove();
                 renumberUnits();
@@ -220,25 +280,20 @@
 
         function renumberUnits() {
             const units = document.querySelectorAll(".unit-editor-card");
-            
             units.forEach((unit, index) => {
-                // Update Visual Title (e.g., Unit 01, Unit 02)
                 const title = unit.querySelector(".unit-title");
                 if (title) title.innerText = `Unit 0${index + 1}`;
 
-                // Update Hidden Input Value
                 const hiddenInput = unit.querySelector(".unit-number-hidden");
                 if (hiddenInput) {
                     hiddenInput.name = `units[${index}][unitNumber]`;
                     hiddenInput.value = index + 1;
                 }
 
-                // Update name attributes for all inputs within this unit to keep array sequential
                 const inputs = unit.querySelectorAll("input");
                 inputs.forEach(input => {
                     const currentName = input.getAttribute("name");
                     if (currentName) {
-                        // Regex replaces the index inside 'units[x]' with the new index
                         const newName = currentName.replace(/units\[\d+\]/, `units[${index}]`);
                         input.setAttribute("name", newName);
                     }
