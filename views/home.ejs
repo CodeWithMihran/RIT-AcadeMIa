@@ -206,7 +206,17 @@
                 
                 <div data-aos="fade-up">
                     <h2 class="text-4xl font-bold mb-6 text-[#1a1a1a]">Ready to transform your semester?</h2>
-                    <p class="text-gray-500 mb-8 text-lg">Join the hundreds of RIT students who have simplified their learning workflow.</p>
+                    
+                    <div class="mb-8">
+                        <a href="/auth/google" class="w-full flex items-center justify-center gap-3 bg-white border border-gray-200 py-3.5 rounded-xl font-bold hover:bg-gray-50 transition-all shadow-sm active:scale-[0.98]">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
+                            <span class="text-sm text-gray-700 font-semibold italic">Continue with RIT Email</span>
+                        </a>
+                        <div class="relative flex items-center justify-center mt-6">
+                            <div class="border-t w-full border-gray-100"></div>
+                            <span class="bg-[#fbfbfa] px-4 text-[9px] text-gray-400 font-black uppercase absolute tracking-[0.2em]">Or Register Manually</span>
+                        </div>
+                    </div>
                     
                     <form action="/auth/register" method="POST" class="space-y-4">
                         <input type="text" name="name" placeholder="Full name" required 
@@ -226,11 +236,11 @@
                         </div>
 
                         <input type="email" name="email" 
-    placeholder="student@ritroorkee.com" 
-    pattern=".+@ritroorkee\.com" 
-    title="Please use your official @ritroorkee.com email address"
-    required
-    class="w-full px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500 transition-all">
+                                placeholder="student@ritroorkee.com" 
+                                pattern=".+@ritroorkee\.com" 
+                                title="Please use your official @ritroorkee.com email address"
+                                required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500 transition-all">
                         
                         <input type="password" name="password" placeholder="Create password" required 
                             class="w-full px-4 py-3 rounded-lg border border-gray-200 outline-none focus:border-blue-500 transition-all">
@@ -252,6 +262,17 @@
                     <h2 class="text-2xl font-bold mb-2">Welcome Back</h2>
                     <p class="text-gray-500 mb-8">Sign in to resume your studies.</p>
                     
+                    <div class="mb-6">
+                        <a href="/auth/google" class="w-full flex items-center justify-center gap-3 border border-gray-200 py-3 rounded-xl font-bold hover:bg-gray-50 transition-all shadow-sm active:scale-[0.98]">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-4 h-4" alt="Google">
+                            <span class="text-xs text-gray-600 font-semibold italic">Continue with RIT Email</span>
+                        </a>
+                        <div class="relative flex items-center justify-center mt-6">
+                            <div class="border-t w-full border-gray-50"></div>
+                            <span class="bg-white px-4 text-[8px] text-gray-300 font-bold uppercase absolute tracking-widest">Or Vault ID</span>
+                        </div>
+                    </div>
+
                     <form action="/auth/login" method="POST" class="space-y-5">
                         <div>
                             <label class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">Email Address</label>

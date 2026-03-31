@@ -8,15 +8,15 @@ const userSchema = new mongoose.Schema({
   },
   branch: {
     type: String,
-    required: true
+    // Removed required: true so Google users can register
   },
   year: {
     type: Number,
-    required: true
+    // Removed required: true
   },
   semester: {
     type: Number,
-    required: true
+    // Removed required: true
   },
   email: {
     type: String,
@@ -25,7 +25,12 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    // Removed required: true (Google users don't have one)
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true // Allows multiple users to have 'null' googleId (manual users)
   },
   role: {
     type: String,

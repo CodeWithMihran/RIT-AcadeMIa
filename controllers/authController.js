@@ -5,16 +5,16 @@ const { generateToken } = require("../utils/generateToken");
 // Register
 module.exports.registerUser = async (req, res) => {
     try {
-    const { name, branch, year, semester, email, password, confirmPassword } = req.body;
+        const { name, branch, year, semester, email, password, confirmPassword } = req.body;
 
-    // --- DOMAIN RESTRICTION LOGIC ---
-    const allowedDomain = "ritroorkee.com";
-    const emailDomain = email.split('@')[1];
+        // --- DOMAIN RESTRICTION LOGIC ---
+        const allowedDomain = "ritroorkee.com";
+        const emailDomain = email.split('@')[1];
 
-    if (emailDomain !== allowedDomain) {
-      req.flash("error", "Access Restricted: Please use your @ritroorkee.com institutional email.");
-      return req.session.save(() => res.redirect("/#auth"));
-    }
+        if (emailDomain !== allowedDomain) {
+            req.flash("error", "Access Restricted: Please use your @ritroorkee.com institutional email.");
+            return req.session.save(() => res.redirect("/#auth"));
+        }
 
         // 1. Password Match Validation
         if (password !== confirmPassword) {
@@ -69,7 +69,12 @@ module.exports.loginUser = async (req, res) => {
             return req.session.save(() => res.redirect("/#auth"));
         }
 
-        // 2. Password Validation
+        // 2. Password Validation (Only if user has a password - handles Google users trying to log in manually)
+        if (!user.password) {
+            req.flash("error", "This account was created with Google. Please use 'Continue with Google'.");
+            return req.session.save(() => res.redirect("/#auth"));
+        }
+
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             req.flash("error", "Invalid email or password.");
