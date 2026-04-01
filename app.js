@@ -135,12 +135,16 @@ app.use("/admin", adminRoutes);
 app.use("/progress", progressRoutes);
 
 // ------------------
-// 404 & Error Handler (Optional - Uncommented if needed)
+// 404 & Error Handler
 // ------------------
 app.use((req, res) => {
     res.status(404).render("404", { url: req.originalUrl });
 });
 
+
+// ------------------
+// 500 & Error Handler
+// ------------------
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).render("500", { error: err.message });
